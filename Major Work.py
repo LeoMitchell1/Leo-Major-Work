@@ -2,6 +2,38 @@ import customtkinter as custom
 import tkinter as tk
 
 
+
+#Habit 3
+habit3_name = 'null'
+habit3_goal = 0
+habit3_progress = 0
+habit3_date = '3/4/2024'
+habit3_completed = False
+
+
+def habit_1():
+    global habit1_increment
+
+    habit1_name = 'null'
+    habit1_goal = 0
+    habit1_progress = 0
+    habit1_increment = 0.1
+    habit1_date = '3/4/2024'
+    habit1_completed = False
+
+    print("Name:", habit1_name)
+    print("Goal:", habit1_goal)
+    print("Progress Name:", habit1_progress)
+    print("Date Created:", habit1_date)
+    print("Habit Name:", habit1_completed)
+
+    habit1_name = input("New name: ")
+    habit1_goal = input("New goal: ")
+
+def update_progress1():
+    habit1_progress += habit1_increment
+
+
 main_window = tk.Tk()
 main_window.title("Habit Tracker")
 main_window.geometry('600x600')
@@ -13,37 +45,9 @@ canvas_height = 600
 c = tk.Canvas(main_window, width=canvas_width, height=canvas_height, bg='white')
 c.pack()
 
-button = custom.CTkButton(main_window, fg_color="red", text="Create Habit")
+
+button = custom.CTkButton(main_window, fg_color="red", text="Update Habit 1", command=habit_1)
 button.place(relx=0.5, rely=0.47, anchor=tk.CENTER)
 
 
-
-
-
-class Habit:
-    def __init__(self, name, goal):
-        self.name = []
-        self.goal = []
-        self.completed = []
-
-def create_habit():
-        name = input("Enter the name of the habit: ")
-        goal = int(input("Enter the goal number of times to complete the habit: "))
-        print(name, "habit created!")
-        return Habit(name, goal)
-
-def show_habit(self):
-        print("Habit name:", self.name)
-        print("Habit goal:", self.goal)
-        print("Habit completed:", self.completed)
-
-def complete_habit(habit, date):
-        date = input("What date did you complete this habit? ")
-        habit.completed.append(date)
-
-def check_progress(habit):
-        check = input("What habit would you like to check? ")
-        return len(habit.completed) / habit.goal * 100
-        
-        
 main_window.mainloop()
