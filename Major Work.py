@@ -3,10 +3,14 @@ import tkinter as tk
 from tkinter import *
 from PIL import Image
 
+
 # Go through and do Error management for all inputs
 # Add a dialog window for exit confirmation
 # Do the create habit dialog window
 # Do the edit habit dialog window
+# Setup settings with light mode and dark mode
+# Write instructions and create pop up window
+
 
 # Creates main app window
 app = custom.CTk()
