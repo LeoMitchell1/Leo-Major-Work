@@ -10,6 +10,7 @@ from PIL import Image
 # Do the edit habit dialog window
 # Setup settings with light mode and dark mode
 # Write instructions and create pop up window
+# Improve the UI
 
 
 # Creates main app window
@@ -30,7 +31,12 @@ habit_completed = {1: False, 2: False}
 
 # Function for exit button
 def exit_button():
-    exit()
+    dialog_exit = custom.CTkInputDialog(text="Are you sure you want to exit? ")
+    exit = dialog_exit.get_input()
+    if exit == "yes" or exit == "Yes" or exit == "YES" or exit == "y" or exit == "Y":
+        quit()
+    else:
+        pass
 
 
 # Function for updating habit progress
@@ -71,7 +77,7 @@ def show_habit(habit_id):
         edit_habit_button_1.place(relx=0.145, rely=0.28, anchor=tk.CENTER)
         delete_habit_button_1.place(relx=0.08, rely=0.28, anchor=tk.CENTER)
 
-
+# Function for create habit button
 def create_habit(habit_id):
     dialog_name = custom.CTkInputDialog(text="Please enter the name of the habit: ")
     habit_name[habit_id] = dialog_name.get_input()
