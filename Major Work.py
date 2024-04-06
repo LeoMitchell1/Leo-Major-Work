@@ -4,10 +4,12 @@ import tkinter.messagebox as messagebox
 from tkinter import *
 from PIL import Image
 
-# Fix grid placement/padding
+
+# Fully create all 8 habits
 # Write instructions and create pop up window
 # Improve the UI (try removing background colour of labels, adding border colour to frame)
-
+# Make appearance window remember the current appearance state
+# Add habit categories (list them at bottom of screen, colour code them with frame borders)
 
 
 
@@ -27,6 +29,8 @@ habit_progress = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7:0, 8:0}
 habit_completed = {1: False, 2: False, 3: False, 4: False, 5: False, 6: False, 7: False, 8: False}
 habit_counter = 0
 appearance_label = None
+background = "#242424"
+frame = "#2b2b2b"
 
 
 # Function for exit button
@@ -61,7 +65,6 @@ def exit_button():
 
 # Function for delete button
 def delete_button(habit_id):
-    print("1")
     global habit_counter
     if habit_id == 1:
         name_label_1.grid_forget()
@@ -146,18 +149,34 @@ def update_progress(habit_id):
                 elif habit_id == 2:
                     progress_label_2.configure(text="Completed!")
                 habit_completed[habit_id] = True
+    if checkbox == 'off':
+        if habit_progress[habit_id] > 0:
+            habit_progress[habit_id] -= 1
+            habit_percentage = (habit_progress[habit_id]/int(habit_goal[habit_id]))
+            if habit_id == 1:
+                progress_label_1.configure(text="Progress: " + (f"{(habit_percentage):.0%}"))
+                progressbar_1.set(habit_percentage)
+            elif habit_id == 2:
+                progress_label_2.configure(text="Progress: " + (f"{(habit_percentage):.0%}"))
+                progressbar_2.set(habit_percentage)
+            if habit_progress[habit_id] < int(habit_goal[habit_id]):
+                if habit_id == 1:
+                    progress_label_1.configure(text="Progress: " + (f"{(habit_percentage):.0%}"))
+                elif habit_id == 2:
+                    progress_label_2.configure(text="Progress: " + (f"{(habit_percentage):.0%}"))
+                habit_completed[habit_id] = False
 
 
 # Updates habit buttons and labels
 def update_habit(habit_id):
     if habit_id == 1:
         name_label_1.configure(text= str(habit_name[habit_id]))
-        goal_label_1.configure(text="Goal: " + str(habit_goal[habit_id]))
+        goal_label_1.configure(text="Goal: " + str(habit_goal[1]) + "/w")
         progress_label_1.configure(text="Progress: " + str(habit_progress[habit_id]) + "%")
         progressbar_1.set(habit_progress[habit_id])
     elif habit_id == 2:
         name_label_2.configure(text= str(habit_name[habit_id]))
-        goal_label_2.configure(text="Goal: " + str(habit_goal[habit_id]))
+        goal_label_2.configure(text="Goal: " + str(habit_goal[1]) + "/w")
         progress_label_2.configure(text="Progress: " + str(habit_progress[habit_id]) + "%")
         progressbar_2.set(habit_progress[habit_id])
 
@@ -165,13 +184,13 @@ def update_habit(habit_id):
 # Function for showing a new habit
 def show_habit(habit_id):
     if habit_id == 1:
-        name_label_1.grid(row=0, column=0, padx=25, pady=(18, 5), sticky = "we")
-        goal_label_1.grid(row=1, column=0, padx=25, pady=5,  sticky = "we")
-        progress_label_1.grid(row=2, column=0, padx=25, pady=5,  sticky = "we")
-        progressbar_1.grid(row=3, column=0, padx=25, pady=5,  sticky = "we")
-        complete_habit_button_1.grid(row=4, column=0, padx=(5,20), pady=5, sticky = "e")
+        name_label_1.grid(row=0, column=0, padx=15, pady=(18, 5), sticky = "we")
+        goal_label_1.grid(row=1, column=0, padx=15, pady=5,  sticky = "we")
+        progress_label_1.grid(row=2, column=0, padx=15, pady=5,  sticky = "we")
+        progressbar_1.grid(row=3, column=0, padx=15, pady=5,  sticky = "we")
+        complete_habit_button_1.grid(row=4, column=0, padx=(5,10), pady=5, sticky = "e")
         edit_habit_button_1.grid(row=4, column=0, padx=(5,5), pady=5)
-        delete_habit_button_1.grid(row=4, column=0, padx=(25,0), pady=5, sticky = "w")
+        delete_habit_button_1.grid(row=4, column=0, padx=(15,0), pady=5, sticky = "w")
 
 
 # Function for edit button
@@ -213,6 +232,7 @@ def create_habit():
     while True:
         dialog_name = custom.CTkInputDialog(text="Please enter the name of the habit: ")
         dialog_name.geometry('325x175+875+500')
+        dialog_name.title("Create Habit")
         placehold_name = dialog_name.get_input()
         if placehold_name == "" or placehold_name == None:
             break
@@ -225,6 +245,7 @@ def create_habit():
     while True:
         dialog_goal = custom.CTkInputDialog(text="How many times do you aim to complete this habit per week? ")
         dialog_goal.geometry('325x175+875+500')
+        dialog_goal.title("Create Goal")
         placehold_goal = dialog_goal.get_input()
         if placehold_goal == "" or placehold_goal == None:
             break
@@ -272,44 +293,50 @@ exit_button.place(relx=0.1, rely=0.94, anchor=tk.CENTER)
 
 
 # Habit 1
-habit_1_frame = custom.CTkFrame(app, width=150, height=200)
+habit_1_frame = custom.CTkFrame(app, width=150, height=200, border_color = 'aquamarine', border_width = 2)
 habit_1_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
 habit_1_frame.columnconfigure(30)
 
-name_label_1 = custom.CTkLabel(master=habit_1_frame, 
-                            width=100,
+name_label_1 = custom.CTkButton(master=habit_1_frame, 
+                            width=120,
                             height=28,
                             text=str(habit_name[1]),
-                            text_color="Black",
-                            fg_color=("darkcyan"),
+                            text_color="White",
+                            border_color = "White",
+                            border_width = 2,
+                            fg_color = (frame),
                             corner_radius=7)
 
 
-goal_label_1 = custom.CTkLabel(master=habit_1_frame,
+goal_label_1 = custom.CTkButton(master=habit_1_frame,
                             width=100,
                             height=28,
-                            text="Goal: " + str(habit_goal[1]),
-                            text_color="Black",
-                            fg_color=("lightpink"),
+                            text = "Goal: " + str(habit_goal[1]) + "/w",
+                            text_color="White",
+                            border_color = "White",
+                            border_width = 2,
+                            fg_color = (frame),
                             corner_radius=7)
 
-progress_label_1 = custom.CTkLabel(master=habit_1_frame,
+progress_label_1 = custom.CTkButton(master=habit_1_frame,
                             width=100,
                             height=28,
                             text="Progress: " + str(habit_progress[1]) + "%",
-                            text_color="Black",
-                            fg_color=("slateblue"),
+                            text_color="White",
+                            border_color = "White",
+                            border_width = 2,
+                            fg_color = (frame),
                             corner_radius=7)
 
 progressbar_1 = custom.CTkProgressBar(habit_1_frame, 
                             orientation="horizontal",
                             width = 100,
-                            height = 10,
-                            progress_color = "slateblue",
+                            height = 15,
+                            progress_color = "white",
                             )
 progressbar_1.set(0)
 
-check_var_1 = custom.StringVar(value="on")
+check_var_1 = custom.StringVar(value="off")
 complete_habit_button_1 = custom.CTkCheckBox(habit_1_frame,
                             text = "", 
                             width = 26,
