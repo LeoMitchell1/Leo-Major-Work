@@ -1,7 +1,6 @@
 import customtkinter as custom
 import tkinter as tk
 import tkinter.messagebox as messagebox
-from tkinter import *
 from PIL import Image
 
 
@@ -32,15 +31,13 @@ appearance_label = None
 background = "#242424"
 frame = "#2b2b2b"
 
-
-def find_lowest_open_habit_id():
+# Function to find the lowest available habit id
+def find_lowest_open_habit_id(): 
     lowest_id = None
-    for habit_id, open_status in habit_open.items():
-        if open_status == 1:  # If habit is open
+    for habit_id, open_status in habit_open.items(): 
+        if open_status == 1:  # Check if habit slot is available
             if lowest_id is None or habit_id < lowest_id:
                 lowest_id = habit_id
-    print(habit_open)
-    print("lowest id:", lowest_id)
     return lowest_id
 
 
@@ -147,17 +144,15 @@ def delete_button(habit_id):
 
 # Function for changing appearance
 def change_appearance(mode:str):
-    global appearance_label, appearance_menu, current_theme
+    global appearance_menu, current_theme
     current_theme = mode
     custom.set_appearance_mode(mode)
-    appearance_menu.set(mode)
-    appearance_label.configure(text_color=("White" if current_theme == "Dark" else "Black"))
     
 
 # Function for settings button
 def settings_button():
-    global appearance_label, appearance_menu, current_theme
-
+    global appearance_menu, current_theme
+    app.withdraw()
     settings_window = custom.CTkToplevel(app)
     settings_window.title("Settings")
     settings_window.geometry('400x200+750+300')
@@ -165,19 +160,18 @@ def settings_button():
     settings_window.attributes('-topmost', True)
 
     appearance_label = custom.CTkLabel(master=settings_window,
-                                        text="Appearance:",
-                                        text_color=("White" if current_theme == "Dark" else "Black"))
+                                        text="Appearance:")
     appearance_label.place(relx=0.5, rely=0.2, anchor=tk.CENTER)
 
     save_button = custom.CTkButton(master=settings_window,
                                     text="Save",
                                     text_color="Black",
                                     width=80,
-                                    command = settings_window.destroy)
+                                    command = lambda: [app.deiconify(), settings_window.destroy()])
     save_button.place(relx=0.5, rely=0.7, anchor=tk.CENTER)
  
     appearance_menu = custom.CTkOptionMenu(settings_window,
-                                values=["Dark", "Light"],
+                                values=["Dark", "Light", "System"],
                                 command = change_appearance)
     appearance_menu.place(relx=0.5, rely=0.4, anchor=tk.CENTER)
     appearance_menu.set(current_theme)
@@ -269,6 +263,7 @@ def update_habit(habit_id):
         progress_label_8.configure(text="Progress: " + str(habit_progress[habit_id]) + "%")
         progressbar_8.set(habit_progress[habit_id])
 
+
 # Function for showing a new habit
 def show_habit(habit_id):
     if habit_id == 1:
@@ -342,6 +337,7 @@ def edit_habit(habit_id):
     while True:
         dialog_name = custom.CTkInputDialog(text="Please enter the name of the habit: ")
         dialog_name.geometry('325x175+875+500')
+        dialog_name.title("Edit Habit")
         placehold_name = dialog_name.get_input()
         if placehold_name == "" or placehold_name == None:
             break
@@ -354,6 +350,7 @@ def edit_habit(habit_id):
     while True:
         dialog_goal = custom.CTkInputDialog(text="How many times do you aim to complete this habit per week? ")
         dialog_goal.geometry('325x175+875+500')
+        dialog_goal.title("Edit Goal")
         placehold_goal = dialog_goal.get_input()
         if placehold_goal == "" or placehold_goal == None:
             break
@@ -377,7 +374,10 @@ def create_habit():
         dialog_name.geometry('325x175+875+500')
         dialog_name.title("Create Habit")
         placehold_name = dialog_name.get_input()
-        if placehold_name == "" or placehold_name == None:
+        if placehold_name == "":
+            break
+        elif placehold_name == None:
+            dialog_name.destroy
             break
         elif len(placehold_name) > 12:
             messagebox.showerror("Error", "Please enter a name shorter than 12 characters.")
@@ -390,7 +390,10 @@ def create_habit():
         dialog_goal.geometry('325x175+875+500')
         dialog_goal.title("Create Goal")
         placehold_goal = dialog_goal.get_input()
-        if placehold_goal == "" or placehold_goal == None:
+        if placehold_goal == "":
+            break
+        elif placehold_name == None:
+            dialog_name.destroy
             break
         elif placehold_goal.isnumeric() == False:
             messagebox.showerror("Error", "Please enter a number.")
@@ -399,12 +402,13 @@ def create_habit():
         else:
             habit_goal[habit_id] = placehold_goal
             break
-
-    habit_progress[habit_id] = 0
-    habit_open[habit_id] = 0 # Sets habit to closed
-    update_habit(habit_id)
-    show_habit(habit_id)
     
+    if placehold_name != None and placehold_goal != None:
+        habit_progress[habit_id] = 0
+        habit_open[habit_id] = 0
+        update_habit(habit_id)
+        show_habit(habit_id)
+
 
 # Buttons
 create_habit_button_ = custom.CTkButton(master=app,
@@ -418,13 +422,13 @@ create_habit_button_.place(relx=0.9, rely=0.9, anchor=tk.CENTER)
 instructions_button = custom.CTkButton(master=app,
                             text="Instructions",
                             text_color="Black")
-instructions_button.place(relx=0.1, rely=0.8, anchor=tk.CENTER)
+instructions_button.place(relx=0.08, rely=0.8, anchor=tk.CENTER)
 
 settings_button = custom.CTkButton(master=app,
                             text="Settings",
                             text_color="Black",
                             command = settings_button)
-settings_button.place(relx=0.1, rely=0.87, anchor=tk.CENTER)
+settings_button.place(relx=0.08, rely=0.87, anchor=tk.CENTER)
 
 exit_button = custom.CTkButton(master=app,
                             text="Exit",
@@ -432,14 +436,14 @@ exit_button = custom.CTkButton(master=app,
                             fg_color = "Firebrick",
                             hover_color = "black",
                             command=exit_button)
-exit_button.place(relx=0.1, rely=0.94, anchor=tk.CENTER)
+exit_button.place(relx=0.08, rely=0.94, anchor=tk.CENTER)
 
 
 # Habit 1
 edit_icon = custom.CTkImage(light_image=Image.open("Edit Icon.png"), size = (15, 15))
 
 habit_1_frame = custom.CTkFrame(app, width=150, height=200, border_color = 'aquamarine', border_width = 2)
-habit_1_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
+habit_1_frame.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
 
 name_label_1 = custom.CTkButton(habit_1_frame, 
                             width=120,
@@ -514,7 +518,7 @@ delete_habit_button_1 = custom.CTkButton(habit_1_frame,
 
 # Habit 2
 habit_2_frame = custom.CTkFrame(app, width=150, height=200)
-habit_2_frame.grid(row=1, column=1, padx=10, pady=10, sticky="nsew")
+habit_2_frame.grid(row=2, column=1, padx=10, pady=10, sticky="nsew")
 
 name_label_2 = custom.CTkButton(habit_2_frame, 
                             width=120,
@@ -589,7 +593,7 @@ delete_habit_button_2 = custom.CTkButton(habit_2_frame,
 
 # Habit 3
 habit_3_frame = custom.CTkFrame(app, width=150, height=200)
-habit_3_frame.grid(row=1, column=2, padx=10, pady=10, sticky="nsew")
+habit_3_frame.grid(row=2, column=2, padx=10, pady=10, sticky="nsew")
 
 name_label_3 = custom.CTkButton(habit_3_frame, 
                             width=120,
@@ -663,7 +667,7 @@ delete_habit_button_3 = custom.CTkButton(habit_3_frame,
 
 # Habit 4
 habit_4_frame = custom.CTkFrame(app, width=150, height=200)
-habit_4_frame.grid(row=1, column=3, padx=10, pady=10, sticky="nsew")
+habit_4_frame.grid(row=2, column=3, padx=10, pady=10, sticky="nsew")
 
 name_label_4 = custom.CTkButton(habit_4_frame, 
                             width=120,
@@ -737,7 +741,7 @@ delete_habit_button_4 = custom.CTkButton(habit_4_frame,
 
 # Habit 5
 habit_5_frame = custom.CTkFrame(app, width=150, height=200)
-habit_5_frame.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
+habit_5_frame.grid(row=3, column=0, padx=10, pady=10, sticky="nsew")
 
 name_label_5 = custom.CTkButton(habit_5_frame, 
                             width=120,
@@ -811,7 +815,7 @@ delete_habit_button_5 = custom.CTkButton(habit_5_frame,
 
 # Habit 6
 habit_6_frame = custom.CTkFrame(app, width=150, height=200)
-habit_6_frame.grid(row=2, column=1, padx=10, pady=10, sticky="nsew")
+habit_6_frame.grid(row=3, column=1, padx=10, pady=10, sticky="nsew")
 
 name_label_6 = custom.CTkButton(habit_6_frame, 
                             width=120,
@@ -885,7 +889,7 @@ delete_habit_button_6 = custom.CTkButton(habit_6_frame,
 
 # Habit 7
 habit_7_frame = custom.CTkFrame(app, width=150, height=200)
-habit_7_frame.grid(row=2, column=2, padx=10, pady=10, sticky="nsew")
+habit_7_frame.grid(row=3, column=2, padx=10, pady=10, sticky="nsew")
 
 name_label_7 = custom.CTkButton(habit_7_frame, 
                             width=120,
@@ -959,7 +963,7 @@ delete_habit_button_7 = custom.CTkButton(habit_7_frame,
 
 # Habit 8
 habit_8_frame = custom.CTkFrame(app, width=150, height=200)
-habit_8_frame.grid(row=2, column=3, padx=10, pady=10, sticky="nsew")
+habit_8_frame.grid(row=3, column=3, padx=10, pady=10, sticky="nsew")
 
 name_label_8 = custom.CTkButton(habit_8_frame, 
                             width=120,
@@ -1032,9 +1036,14 @@ delete_habit_button_8 = custom.CTkButton(habit_8_frame,
 
 
 calendar_frame_1 = custom.CTkFrame(app, width=50, height=50)
-calendar_frame_1.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+calendar_frame_1.grid(row=0, column=0, padx=10, pady=10, sticky = "w")
 
 calendar_frame_2 = custom.CTkFrame(app, width=50, height=50)
-calendar_frame_2.grid(row=0, padx=10, pady=10, sticky="nsew")
+calendar_frame_2.grid(row=0, column=0, pady=10, sticky = "e")
+
+calendar_frame_3 = custom.CTkFrame(app, width=50, height=50)
+calendar_frame_3.grid(row=0, column=0, padx=10, pady=10)
+
+
 
 app.mainloop()
