@@ -3,12 +3,14 @@ import tkinter as tk
 import tkinter.messagebox as messagebox
 from PIL import Image
 
-
+# TO DOs
 # Write instructions and create pop up window
 # Improve the UI (try removing background colour of labels, adding border colour to frame)
 # Add habit categories (list them at bottom of screen, colour code them with frame borders)
 # Add a daily calendar function at the top
 # Create calendar tracking window
+# Make the habit information save to a file so that it will remember when you close and reopen the app
+# Use .place for calendar frames
 
 
 # Creates main app window
@@ -21,7 +23,7 @@ current_theme = custom.get_appearance_mode()
 custom.set_default_color_theme("green")
 
 
-# Initialises habit variables
+# Initialises variables so they all are defined and have an initial value
 habit_name = {1: "Habit 1", 2: "Habit 2", 3: "Habit 3", 4: "Habit 4", 5: "Habit 5", 6: "Habit 6", 7: "Habit 7", 8: "Habit 8"}
 habit_goal = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0}
 habit_progress = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0}
@@ -1035,14 +1037,17 @@ delete_habit_button_8 = custom.CTkButton(habit_8_frame,
                             command = lambda: delete_button(8))
 
 
-calendar_frame_1 = custom.CTkFrame(app, width=50, height=50)
+calendar_frame_1 = custom.CTkFrame(app, width=45, height=60)
 calendar_frame_1.grid(row=0, column=0, padx=10, pady=10, sticky = "w")
 
-calendar_frame_2 = custom.CTkFrame(app, width=50, height=50)
-calendar_frame_2.grid(row=0, column=0, pady=10, sticky = "e")
+calendar_frame_2 = custom.CTkFrame(app, width=45, height=60)
+calendar_frame_2.grid(row=0, column=0, pady=10)
 
-calendar_frame_3 = custom.CTkFrame(app, width=50, height=50)
+calendar_frame_3 = custom.CTkFrame(app, width=45, height=60)
 calendar_frame_3.grid(row=0, column=0, padx=10, pady=10)
+
+calendar_frame_4 = custom.CTkFrame(app, width=45, height=60)
+calendar_frame_4.grid(row=0, column=1, padx=10, pady=10, sticky = "e")
 
 
 
