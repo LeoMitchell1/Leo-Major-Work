@@ -10,13 +10,13 @@ from PIL import Image
 # Add a daily calendar function at the top
 # Create calendar tracking window
 # Make the habit information save to a file so that it will remember when you close and reopen the app
-# Use .place for calendar frames
+# Fix up the positioning of the calendar frames
 
 
 # Creates main app window
 app = custom.CTk()
 app.title("Habit Tracker")
-app.geometry('700x700+650+200')
+app.geometry('675x700+550+130')
 app.resizable(False, False)
 custom.set_appearance_mode("Dark")
 current_theme = custom.get_appearance_mode()
@@ -157,7 +157,7 @@ def settings_button():
     app.withdraw()
     settings_window = custom.CTkToplevel(app)
     settings_window.title("Settings")
-    settings_window.geometry('400x200+750+300')
+    settings_window.geometry('400x200+800+500')
     settings_window.resizable(False, False)
     settings_window.attributes('-topmost', True)
 
@@ -338,7 +338,7 @@ def show_habit(habit_id):
 def edit_habit(habit_id):
     while True:
         dialog_name = custom.CTkInputDialog(text="Please enter the name of the habit: ")
-        dialog_name.geometry('325x175+875+500')
+        dialog_name.geometry('325x175+800+500')
         dialog_name.title("Edit Habit")
         placehold_name = dialog_name.get_input()
         if placehold_name == "" or placehold_name == None:
@@ -351,7 +351,7 @@ def edit_habit(habit_id):
     
     while True:
         dialog_goal = custom.CTkInputDialog(text="How many times do you aim to complete this habit per week? ")
-        dialog_goal.geometry('325x175+875+500')
+        dialog_goal.geometry('325x175+825+500')
         dialog_goal.title("Edit Goal")
         placehold_goal = dialog_goal.get_input()
         if placehold_goal == "" or placehold_goal == None:
@@ -373,7 +373,7 @@ def create_habit():
     habit_id = find_lowest_open_habit_id()
     while True:
         dialog_name = custom.CTkInputDialog(text="Please enter the name of the habit: ")
-        dialog_name.geometry('325x175+875+500')
+        dialog_name.geometry('325x175+825+500')
         dialog_name.title("Create Habit")
         placehold_name = dialog_name.get_input()
         if placehold_name == "":
@@ -389,7 +389,7 @@ def create_habit():
     
     while True:
         dialog_goal = custom.CTkInputDialog(text="How many times do you aim to complete this habit per week? ")
-        dialog_goal.geometry('325x175+875+500')
+        dialog_goal.geometry('325x175+825+500')
         dialog_goal.title("Create Goal")
         placehold_goal = dialog_goal.get_input()
         if placehold_goal == "":
@@ -445,7 +445,7 @@ exit_button.place(relx=0.08, rely=0.94, anchor=tk.CENTER)
 edit_icon = custom.CTkImage(light_image=Image.open("Edit Icon.png"), size = (15, 15))
 
 habit_1_frame = custom.CTkFrame(app, width=150, height=200, border_color = 'aquamarine', border_width = 2)
-habit_1_frame.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
+habit_1_frame.grid(row=2, column=0, padx=7, pady=10, sticky="nsew")
 
 name_label_1 = custom.CTkButton(habit_1_frame, 
                             width=120,
@@ -520,7 +520,7 @@ delete_habit_button_1 = custom.CTkButton(habit_1_frame,
 
 # Habit 2
 habit_2_frame = custom.CTkFrame(app, width=150, height=200)
-habit_2_frame.grid(row=2, column=1, padx=10, pady=10, sticky="nsew")
+habit_2_frame.grid(row=2, column=1, padx=7, pady=10, sticky="nsew")
 
 name_label_2 = custom.CTkButton(habit_2_frame, 
                             width=120,
@@ -595,7 +595,7 @@ delete_habit_button_2 = custom.CTkButton(habit_2_frame,
 
 # Habit 3
 habit_3_frame = custom.CTkFrame(app, width=150, height=200)
-habit_3_frame.grid(row=2, column=2, padx=10, pady=10, sticky="nsew")
+habit_3_frame.grid(row=2, column=2, padx=7, pady=10, sticky="nsew")
 
 name_label_3 = custom.CTkButton(habit_3_frame, 
                             width=120,
@@ -669,7 +669,7 @@ delete_habit_button_3 = custom.CTkButton(habit_3_frame,
 
 # Habit 4
 habit_4_frame = custom.CTkFrame(app, width=150, height=200)
-habit_4_frame.grid(row=2, column=3, padx=10, pady=10, sticky="nsew")
+habit_4_frame.grid(row=2, column=3, padx=7, pady=10, sticky="nsew")
 
 name_label_4 = custom.CTkButton(habit_4_frame, 
                             width=120,
@@ -743,7 +743,7 @@ delete_habit_button_4 = custom.CTkButton(habit_4_frame,
 
 # Habit 5
 habit_5_frame = custom.CTkFrame(app, width=150, height=200)
-habit_5_frame.grid(row=3, column=0, padx=10, pady=10, sticky="nsew")
+habit_5_frame.grid(row=3, column=0, padx=7, pady=10, sticky="nsew")
 
 name_label_5 = custom.CTkButton(habit_5_frame, 
                             width=120,
@@ -817,7 +817,7 @@ delete_habit_button_5 = custom.CTkButton(habit_5_frame,
 
 # Habit 6
 habit_6_frame = custom.CTkFrame(app, width=150, height=200)
-habit_6_frame.grid(row=3, column=1, padx=10, pady=10, sticky="nsew")
+habit_6_frame.grid(row=3, column=1, padx=7, pady=10, sticky="nsew")
 
 name_label_6 = custom.CTkButton(habit_6_frame, 
                             width=120,
@@ -891,7 +891,7 @@ delete_habit_button_6 = custom.CTkButton(habit_6_frame,
 
 # Habit 7
 habit_7_frame = custom.CTkFrame(app, width=150, height=200)
-habit_7_frame.grid(row=3, column=2, padx=10, pady=10, sticky="nsew")
+habit_7_frame.grid(row=3, column=2, padx=7, pady=10, sticky="nsew")
 
 name_label_7 = custom.CTkButton(habit_7_frame, 
                             width=120,
@@ -965,7 +965,7 @@ delete_habit_button_7 = custom.CTkButton(habit_7_frame,
 
 # Habit 8
 habit_8_frame = custom.CTkFrame(app, width=150, height=200)
-habit_8_frame.grid(row=3, column=3, padx=10, pady=10, sticky="nsew")
+habit_8_frame.grid(row=3, column=3, padx=7, pady=10, sticky="nsew")
 
 name_label_8 = custom.CTkButton(habit_8_frame, 
                             width=120,
@@ -1037,18 +1037,39 @@ delete_habit_button_8 = custom.CTkButton(habit_8_frame,
                             command = lambda: delete_button(8))
 
 
-calendar_frame_1 = custom.CTkFrame(app, width=45, height=60)
-calendar_frame_1.grid(row=0, column=0, padx=10, pady=10, sticky = "w")
+# Calendar frames
+invisible_frame = custom.CTkFrame(app, width=0, height=60)
+invisible_frame.grid(row = 0, column = 0, pady = 10)
 
-calendar_frame_2 = custom.CTkFrame(app, width=45, height=60)
-calendar_frame_2.grid(row=0, column=0, pady=10)
+calendar_frame_1 = custom.CTkFrame(app, width=55, height=60)
+calendar_frame_1.place(relx = 0.015, rely = 0.015)
 
-calendar_frame_3 = custom.CTkFrame(app, width=45, height=60)
-calendar_frame_3.grid(row=0, column=0, padx=10, pady=10)
+calendar_frame_2 = custom.CTkFrame(app, width=55, height=60)
+calendar_frame_2.place(relx = 0.110, rely = 0.015)
 
-calendar_frame_4 = custom.CTkFrame(app, width=45, height=60)
-calendar_frame_4.grid(row=0, column=1, padx=10, pady=10, sticky = "e")
+calendar_frame_3 = custom.CTkFrame(app, width=55, height=60)
+calendar_frame_3.place(relx = 0.205, rely = 0.015)
 
+calendar_frame_4 = custom.CTkFrame(app, width=55, height=60)
+calendar_frame_4.place(relx = 0.300, rely = 0.015)
+
+calendar_frame_5 = custom.CTkFrame(app, width=55, height=60)
+calendar_frame_5.place(relx = 0.395, rely = 0.015)
+
+calendar_frame_6 = custom.CTkFrame(app, width=55, height=60)
+calendar_frame_6.place(relx = 0.490, rely = 0.015)
+
+calendar_frame_7 = custom.CTkFrame(app, width=55, height=60)
+calendar_frame_7.place(relx = 0.585, rely = 0.015)
+
+calendar_frame_8 = custom.CTkFrame(app, width=55, height=60)
+calendar_frame_8.place(relx = 0.680, rely = 0.015)
+
+calendar_frame_9 = custom.CTkFrame(app, width=55, height=60)
+calendar_frame_9.place(relx = 0.775, rely = 0.015)
+
+calendar_frame_10 = custom.CTkFrame(app, width=55, height=60)
+calendar_frame_10.place(relx = 0.870, rely = 0.015)
 
 
 app.mainloop()
