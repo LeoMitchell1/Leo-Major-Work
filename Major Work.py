@@ -1,7 +1,9 @@
 import customtkinter as custom
 import tkinter as tk
 import tkinter.messagebox as messagebox
+import pandas as pd
 from PIL import Image
+
 
 # TO DOs
 # Write instructions and create pop up window
@@ -11,27 +13,35 @@ from PIL import Image
 # Create calendar tracking window
 # Make the habit information save to a file so that it will remember when you close and reopen the app
 # Fix up the positioning of the calendar frames
+# Change the pop up windows for create and edit habit to be all in one window, using entry fields instead of dialog boxes
 
 
 # Creates main app window
 app = custom.CTk()
 app.title("Habit Tracker")
-app.geometry('675x700+550+130')
+app.geometry('660x700+550+130')
 app.resizable(False, False)
 custom.set_appearance_mode("Dark")
 current_theme = custom.get_appearance_mode()
 custom.set_default_color_theme("green")
 
+def read_csv():
+    global df, habits
+    df = pd.read_csv("Habits.csv")
+    habits = df['Name'].tolist()
+read_csv()
+
 
 # Initialises variables so they all are defined and have an initial value
-habit_name = {1: "Habit 1", 2: "Habit 2", 3: "Habit 3", 4: "Habit 4", 5: "Habit 5", 6: "Habit 6", 7: "Habit 7", 8: "Habit 8"}
-habit_goal = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0}
-habit_progress = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0}
-habit_open = {1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1, 7: 1, 8: 1}
-habit_completed = {1: False, 2: False, 3: False, 4: False, 5: False, 6: False, 7: False, 8: False}
+habit_name = {1: df.iloc[0,0], 2: df.iloc[1,0], 3: df.iloc[2,0], 4: df.iloc[3,0], 5: df.iloc[4,0], 6: df.iloc[5,0], 7: df.iloc[6,0], 8: df.iloc[7,0]}
+habit_goal = {1: df.iloc[0,1], 2: df.iloc[1,1], 3: df.iloc[2,1], 4: df.iloc[3,1], 5: df.iloc[4,1], 6: df.iloc[5,1], 7: df.iloc[6,1], 8: df.iloc[7,1]}
+habit_progress = {1: df.iloc[0,2], 2: df.iloc[1,2], 3: df.iloc[2,2], 4: df.iloc[3,2], 5: df.iloc[4,2], 6: df.iloc[5,2], 7: df.iloc[6,2], 8: df.iloc[7,2]}
+habit_open = {1: df.iloc[0,3], 2: df.iloc[1,3], 3: df.iloc[2,3], 4: df.iloc[3,3], 5: df.iloc[4,3], 6: df.iloc[5,3], 7: df.iloc[6,3], 8: df.iloc[7,3]}
+habit_completed = {1: df.iloc[0,4], 2: df.iloc[1,4], 3: df.iloc[2,4], 4: df.iloc[3,4], 5: df.iloc[4,4], 6: df.iloc[5,4], 7: df.iloc[6,4], 8: df.iloc[7,4]}
 appearance_label = None
 background = "#242424"
 frame = "#2b2b2b"
+
 
 # Function to find the lowest available habit id
 def find_lowest_open_habit_id(): 
@@ -142,6 +152,7 @@ def delete_button(habit_id):
     habit_name[habit_id] = ""
     habit_progress[habit_id] = 0
     habit_open[habit_id] = 1 # Sets habit to open
+    habit_completed[habit_id] = False
 
 
 # Function for changing appearance
@@ -181,12 +192,24 @@ def settings_button():
 
 # Function for updating habit progress
 def update_progress(habit_id):
-    global check_var_1, check_var_2
+    global check_var_1, check_var_2, check_var_3, check_var_4, check_var_5, check_var_6, check_var_7, check_var_8
 
     if habit_id == 1:
         checkbox = check_var_1.get()
     elif habit_id == 2:
         checkbox = check_var_2.get()
+    elif habit_id == 3:
+        checkbox = check_var_3.get()
+    elif habit_id == 4:
+        checkbox = check_var_4.get()
+    elif habit_id == 5:
+        checkbox = check_var_5.get()
+    elif habit_id == 6:
+        checkbox = check_var_6.get()
+    elif habit_id == 7:
+        checkbox = check_var_7.get()
+    elif habit_id == 8:
+        checkbox = check_var_8.get()
 
     if checkbox == 'on':
         if (habit_progress[habit_id]) < int(habit_goal[habit_id]):
@@ -198,11 +221,41 @@ def update_progress(habit_id):
             elif habit_id == 2:
                 progress_label_2.configure(text="Progress: " + (f"{(habit_percentage):.0%}"))
                 progressbar_2.set(habit_percentage)
+            elif habit_id == 3:
+                progress_label_3.configure(text="Progress: " + (f"{(habit_percentage):.0%}"))
+                progressbar_3.set(habit_percentage)
+            elif habit_id == 4:
+                progress_label_4.configure(text="Progress: " + (f"{(habit_percentage):.0%}"))
+                progressbar_4.set(habit_percentage)
+            elif habit_id == 5:
+                progress_label_5.configure(text="Progress: " + (f"{(habit_percentage):.0%}"))
+                progressbar_5.set(habit_percentage)
+            elif habit_id == 6:
+                progress_label_6.configure(text="Progress: " + (f"{(habit_percentage):.0%}"))
+                progressbar_6.set(habit_percentage)
+            elif habit_id == 7:
+                progress_label_7.configure(text="Progress: " + (f"{(habit_percentage):.0%}"))
+                progressbar_7.set(habit_percentage)
+            elif habit_id == 8:
+                progress_label_8.configure(text="Progress: " + (f"{(habit_percentage):.0%}"))
+                progressbar_8.set(habit_percentage)
             if habit_progress[habit_id] >= int(habit_goal[habit_id]):
                 if habit_id == 1:
                     progress_label_1.configure(text="Completed!")
                 elif habit_id == 2:
                     progress_label_2.configure(text="Completed!")
+                elif habit_id == 3:
+                    progress_label_3.configure(text="Completed!")
+                elif habit_id == 4:
+                    progress_label_4.configure(text="Completed!")
+                elif habit_id == 5:
+                    progress_label_5.configure(text="Completed!")
+                elif habit_id == 6:
+                    progress_label_6.configure(text="Completed!")
+                elif habit_id == 7:
+                    progress_label_7.configure(text="Completed!")
+                elif habit_id == 8:
+                    progress_label_8.configure(text="Completed!")
                 habit_completed[habit_id] = True
     if checkbox == 'off':
         if habit_progress[habit_id] > 0:
@@ -214,11 +267,41 @@ def update_progress(habit_id):
             elif habit_id == 2:
                 progress_label_2.configure(text="Progress: " + (f"{(habit_percentage):.0%}"))
                 progressbar_2.set(habit_percentage)
+            elif habit_id == 3:
+                progress_label_3.configure(text="Progress: " + (f"{(habit_percentage):.0%}"))
+                progressbar_3.set(habit_percentage)
+            elif habit_id == 4:
+                progress_label_4.configure(text="Progress: " + (f"{(habit_percentage):.0%}"))
+                progressbar_4.set(habit_percentage)
+            elif habit_id == 5:
+                progress_label_5.configure(text="Progress: " + (f"{(habit_percentage):.0%}"))
+                progressbar_5.set(habit_percentage)
+            elif habit_id == 6:
+                progress_label_6.configure(text="Progress: " + (f"{(habit_percentage):.0%}"))
+                progressbar_6.set(habit_percentage)
+            elif habit_id == 7:
+                progress_label_7.configure(text="Progress: " + (f"{(habit_percentage):.0%}"))
+                progressbar_7.set(habit_percentage)
+            elif habit_id == 8:
+                progress_label_8.configure(text="Progress: " + (f"{(habit_percentage):.0%}"))
+                progressbar_8.set(habit_percentage)
             if habit_progress[habit_id] < int(habit_goal[habit_id]):
                 if habit_id == 1:
                     progress_label_1.configure(text="Progress: " + (f"{(habit_percentage):.0%}"))
                 elif habit_id == 2:
                     progress_label_2.configure(text="Progress: " + (f"{(habit_percentage):.0%}"))
+                elif habit_id == 3:
+                    progress_label_3.configure(text="Progress: " + (f"{(habit_percentage):.0%}"))
+                elif habit_id == 4:
+                    progress_label_4.configure(text="Progress: " + (f"{(habit_percentage):.0%}"))
+                elif habit_id == 5:
+                    progress_label_5.configure(text="Progress: " + (f"{(habit_percentage):.0%}"))
+                elif habit_id == 6:
+                    progress_label_6.configure(text="Progress: " + (f"{(habit_percentage):.0%}"))
+                elif habit_id == 7:
+                    progress_label_7.configure(text="Progress: " + (f"{(habit_percentage):.0%}"))
+                elif habit_id == 8:
+                    progress_label_8.configure(text="Progress: " + (f"{(habit_percentage):.0%}"))
                 habit_completed[habit_id] = False
 
 
@@ -424,13 +507,13 @@ create_habit_button_.place(relx=0.9, rely=0.9, anchor=tk.CENTER)
 instructions_button = custom.CTkButton(master=app,
                             text="Instructions",
                             text_color="Black")
-instructions_button.place(relx=0.08, rely=0.8, anchor=tk.CENTER)
+instructions_button.place(relx=0.12, rely=0.8, anchor=tk.CENTER)
 
 settings_button = custom.CTkButton(master=app,
                             text="Settings",
                             text_color="Black",
                             command = settings_button)
-settings_button.place(relx=0.08, rely=0.87, anchor=tk.CENTER)
+settings_button.place(relx=0.12, rely=0.87, anchor=tk.CENTER)
 
 exit_button = custom.CTkButton(master=app,
                             text="Exit",
@@ -438,7 +521,7 @@ exit_button = custom.CTkButton(master=app,
                             fg_color = "Firebrick",
                             hover_color = "black",
                             command=exit_button)
-exit_button.place(relx=0.08, rely=0.94, anchor=tk.CENTER)
+exit_button.place(relx=0.12, rely=0.94, anchor=tk.CENTER)
 
 
 # Habit 1
@@ -1045,31 +1128,31 @@ calendar_frame_1 = custom.CTkFrame(app, width=55, height=60)
 calendar_frame_1.place(relx = 0.015, rely = 0.015)
 
 calendar_frame_2 = custom.CTkFrame(app, width=55, height=60)
-calendar_frame_2.place(relx = 0.110, rely = 0.015)
+calendar_frame_2.place(relx = 0.113, rely = 0.015)
 
 calendar_frame_3 = custom.CTkFrame(app, width=55, height=60)
-calendar_frame_3.place(relx = 0.205, rely = 0.015)
+calendar_frame_3.place(relx = 0.211, rely = 0.015)
 
 calendar_frame_4 = custom.CTkFrame(app, width=55, height=60)
-calendar_frame_4.place(relx = 0.300, rely = 0.015)
+calendar_frame_4.place(relx = 0.309, rely = 0.015)
 
 calendar_frame_5 = custom.CTkFrame(app, width=55, height=60)
-calendar_frame_5.place(relx = 0.395, rely = 0.015)
+calendar_frame_5.place(relx = 0.407, rely = 0.015)
 
 calendar_frame_6 = custom.CTkFrame(app, width=55, height=60)
-calendar_frame_6.place(relx = 0.490, rely = 0.015)
+calendar_frame_6.place(relx = 0.505, rely = 0.015)
 
 calendar_frame_7 = custom.CTkFrame(app, width=55, height=60)
-calendar_frame_7.place(relx = 0.585, rely = 0.015)
+calendar_frame_7.place(relx = 0.603, rely = 0.015)
 
 calendar_frame_8 = custom.CTkFrame(app, width=55, height=60)
-calendar_frame_8.place(relx = 0.680, rely = 0.015)
+calendar_frame_8.place(relx = 0.701, rely = 0.015)
 
 calendar_frame_9 = custom.CTkFrame(app, width=55, height=60)
-calendar_frame_9.place(relx = 0.775, rely = 0.015)
+calendar_frame_9.place(relx = 0.799, rely = 0.015)
 
 calendar_frame_10 = custom.CTkFrame(app, width=55, height=60)
-calendar_frame_10.place(relx = 0.870, rely = 0.015)
+calendar_frame_10.place(relx = 0.898, rely = 0.015)
 
 
 app.mainloop()
