@@ -1,9 +1,9 @@
-Name,Goal,Progress,Open,Completed
-Habit 1,0,0,1,False
-Habit 2,0,0,1,False
-Habit 3,0,0,1,False
-Habit 4,0,0,1,False
-Habit 5,0,0,1,False
-Habit 6,0,0,1,False
-Habit 7,0,0,1,False
-Habit 8,0,0,1,False
+Name,Goal,Progress,Completed,Displayed, Checkbox
+Journalling,7,5,False,True,True
+d,0,0,False,True,True
+Journalling,9,5,False,True,True
+Gym,0,0,False,True,False
+Habit 5,0,0,False,False,False
+Habit 6,0,0,False,False,False
+Habit 7,0,0,False,False,False
+Habit 8,0,0,False,False,False
