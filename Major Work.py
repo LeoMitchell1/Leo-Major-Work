@@ -14,8 +14,10 @@ from PIL import Image
 # Change the pop up windows for create and edit habit to be all in one window, using entry fields instead of dialog boxes (optional)
 # Create a reset button that deletes all habits and resets and saves all their values
 
+# Make it so that deleting a habit sets its name to Habit + Habit_id instead of blank
 # Fix the error with the habit percentage not accepting nan
 # Fix the isnumeric error not accepting NoneType
+
 
 # Completed
 
@@ -32,9 +34,8 @@ custom.set_default_color_theme("green")
 
 # Reads the habits.csv file to receive all the saved data of each habit
 def read_csv(): 
-    global df, habits
+    global df
     df = pd.read_csv("Habits.csv")
-    habits = df['Name'].tolist()
 read_csv()
 
 # Writes the data onto the habits.csv file to save any changes
@@ -210,7 +211,7 @@ def update_progress(habit_id):
 # Updates habit buttons and labels
 def update_habit(habit_id):
     name_labels[habit_id-1].configure(text= str(habit_name[habit_id]))
-    goal_labels[habit_id-1].configure(text="Goal: " + str(habit_goal[1]) + "/w")
+    goal_labels[habit_id-1].configure(text="Goal: " + str(habit_goal[habit_id]) + "/w")
     progress_labels[habit_id-1].configure(text="Progress: " + str(habit_progress[habit_id]) + "%")
     progress_bars[habit_id-1].set(habit_progress[habit_id])
     write_csv(habit_id)
@@ -265,8 +266,13 @@ def edit_habit(habit_id):
         dialog_goal.geometry('325x175+825+500')
         dialog_goal.title("Edit Goal")
         placehold_goal = dialog_goal.get_input()
-        if placehold_goal == "" or placehold_goal == None:
+        if placehold_goal == None:
+            dialog_goal.destroy
             break
+        elif placehold_goal == "":
+            messagebox.showerror("Error", "Please enter a number.")
+        elif placehold_goal == "0":
+            messagebox.showerror("Error", "Please enter a number greater than 0.")
         elif placehold_goal.isnumeric() == False:
             messagebox.showerror("Error", "Please enter a number.")
         elif int(placehold_goal) > 20:
@@ -303,12 +309,14 @@ def create_habit():
         dialog_goal.geometry('325x175+825+500')
         dialog_goal.title("Create Goal")
         placehold_goal = dialog_goal.get_input()
-        if placehold_goal == "":
+        if placehold_goal == None:
+            dialog_goal.destroy
             break
-        elif placehold_name == None:
-            dialog_name.destroy
-            break
-        elif placehold_goal.isdigit() == False:
+        elif placehold_goal == "":
+            messagebox.showerror("Error", "Please enter a number.")
+        elif placehold_goal == "0":
+            messagebox.showerror("Error", "Please enter a number greater than 0.")
+        elif placehold_goal.isnumeric() == False:
             messagebox.showerror("Error", "Please enter a number.")
         elif int(placehold_goal) > 20:
             messagebox.showerror("Error", "Please enter a number less than 20.")
