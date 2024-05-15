@@ -8,15 +8,15 @@ from PIL import Image
 # TO DOs
 # Write instructions and create pop up window
 # Improve the UI - Design features (try removing background colour of labels, adding border colour to frame)
-# Add habit categories (list them at bottom of screen, colour code them with frame borders)
+# Add habit categories (list them at bottom of screen, colour code them with frame borders, make little colour squares appear in the calendar frames that it was completed)
 # Add a daily calendar function at the top
 # Create calendar tracking window with stats (optional)
 # Change the pop up windows for create and edit habit to be all in one window, using entry fields instead of dialog boxes (optional)
-# Create a reset button that deletes all habits and resets and saves all their values
+# Make it so that selectiing the day at the top, it will then allow you to tick off habits for that day.
+
 
 # Make it so that deleting a habit sets its name to Habit + Habit_id instead of blank
-# Fix the error with the habit percentage not accepting nan
-# Fix the isnumeric error not accepting NoneType
+# Make the appearance remember what it is set to when you close and reopen
 
 
 # Completed
@@ -31,6 +31,7 @@ app.resizable(False, False)
 custom.set_appearance_mode("Dark")
 current_theme = custom.get_appearance_mode()
 custom.set_default_color_theme("green")
+
 
 # Reads the habits.csv file to receive all the saved data of each habit
 def read_csv(): 
@@ -59,6 +60,7 @@ habit_checkbox = {1: df.iloc[0,5], 2: df.iloc[1,5], 3: df.iloc[2,5], 4: df.iloc[
 appearance_label = None
 background = "#242424"
 frame = "#2b2b2b"
+full = False
 
 # Initialises all the lists for habit labels and buttons
 habit_frames = []
@@ -74,12 +76,17 @@ delete_habit_buttons = []
 
 # Function to find the lowest available habit id
 def find_lowest_available_habit_id(): 
+    global full
+    full = False
     lowest_id = None
     for habit_id, display_status in habit_displayed.items(): 
         if display_status == False:  # Check if habit slot is available
             if lowest_id is None or habit_id < lowest_id:
                 lowest_id = habit_id
-    return lowest_id
+                return lowest_id
+    if lowest_id == None:
+        messagebox.showerror("Error", "You have reached the maximum amount of habits.")
+        return lowest_id
 
 
 # Function for exit button
@@ -112,6 +119,54 @@ def exit_button():
     no_button.place(relx=0.3, rely=0.7, anchor=tk.CENTER)
 
 
+# Function for the reset button
+def reset_button():
+    reset_confirm = custom.CTkToplevel(app)
+    reset_confirm.title("Reset Confirmation")
+    reset_confirm.geometry('250x120+900+500')
+    reset_confirm.resizable(False, False)
+    reset_confirm.attributes('-topmost', True)
+    
+    def reset_habits():
+        for i in range(1,9):
+            name_labels[i-1].grid_forget()
+            goal_labels[i-1].grid_forget()
+            progress_labels[i-1].grid_forget()
+            progress_bars[i-1].grid_forget()
+            complete_habit_buttons[i-1].grid_forget()
+            edit_habit_buttons[i-1].grid_forget()
+            delete_habit_buttons[i-1].grid_forget()
+            habit_name[i] = ""
+            habit_goal[i] = 0
+            habit_progress[i] = 0
+            habit_displayed[i] = False # Sets habit slot to available
+            habit_completed[i] = False
+            habit_checkbox[i] = False
+            write_csv(i)
+        reset_confirm.destroy()
+
+    reset_label = custom.CTkLabel(master=reset_confirm,
+                            text="Are you sure you want to reset?",
+                            text_color="White")
+    reset_label.place(relx=0.5, rely=0.35, anchor=tk.CENTER)
+
+    yes_button = custom.CTkButton(master=reset_confirm,
+                            text="Yes",
+                            text_color="Black",
+                            fg_color="Firebrick",
+                            hover_color = "Orangered",
+                            width = 80,
+                            command=reset_habits)
+    yes_button.place(relx=0.7, rely=0.7, anchor=tk.CENTER)
+
+    no_button = custom.CTkButton(master=reset_confirm,
+                            text="No",
+                            text_color="Black",
+                            width = 80,
+                            command=reset_confirm.destroy)
+    no_button.place(relx=0.3, rely=0.7, anchor=tk.CENTER)
+
+
 # Function for delete button
 def delete_button(habit_id):
     name_labels[habit_id-1].grid_forget()
@@ -129,23 +184,6 @@ def delete_button(habit_id):
     habit_checkbox[habit_id] = False
     write_csv(habit_id)
     
-
-def reset_button():
-    for i in range(1,9):
-        name_labels[i-1].grid_forget()
-        goal_labels[i-1].grid_forget()
-        progress_labels[i-1].grid_forget()
-        progress_bars[i-1].grid_forget()
-        complete_habit_buttons[i-1].grid_forget()
-        edit_habit_buttons[i-1].grid_forget()
-        delete_habit_buttons[i-1].grid_forget()
-        habit_name[i] = ""
-        habit_goal[i] = 0
-        habit_progress[i] = 0
-        habit_displayed[i] = False # Sets habit slot to available
-        habit_completed[i] = False
-        habit_checkbox[i] = False
-        write_csv(i)
 
 # Function for changing appearance
 def change_appearance(mode:str):
@@ -255,8 +293,8 @@ def edit_habit(habit_id):
         placehold_name = dialog_name.get_input()
         if placehold_name == "" or placehold_name == None:
             break
-        elif len(placehold_name) > 12:
-            messagebox.showerror("Error", "Please enter a name shorter than 12 characters.")
+        elif len(placehold_name) > 15:
+            messagebox.showerror("Error", "Please enter a name shorter than 15 characters.")
         else:
             habit_name[habit_id] = placehold_name
             break
@@ -288,6 +326,8 @@ def edit_habit(habit_id):
 # Function for create habit button
 def create_habit():
     habit_id = find_lowest_available_habit_id()
+    if habit_id == None:
+        return
     while True:
         dialog_name = custom.CTkInputDialog(text="Please enter the name of the habit: ")
         dialog_name.geometry('325x175+825+500')
@@ -298,8 +338,8 @@ def create_habit():
         elif placehold_name == None:
             dialog_name.destroy
             break
-        elif len(placehold_name) > 12:
-            messagebox.showerror("Error", "Please enter a name shorter than 12 characters.")
+        elif len(placehold_name) > 15:
+            messagebox.showerror("Error", "Please enter a name shorter than 15 characters.")
         else:
             habit_name[habit_id] = placehold_name
             break
@@ -332,6 +372,7 @@ def create_habit():
         show_habit(habit_id)
 
     write_csv(habit_id)
+
 
 # Buttons
 create_habit_button_ = custom.CTkButton(master=app,
@@ -465,6 +506,7 @@ for i in range(1,9):
                             hover_color = "Orangered",
                             command = lambda i=i: delete_button(i))
     delete_habit_buttons.append(delete_habit_button)
+
 
 # Calendar frames
 invisible_frame = custom.CTkFrame(app, width=0, height=60)
