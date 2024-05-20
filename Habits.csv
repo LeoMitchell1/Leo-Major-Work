@@ -1,9 +1,9 @@
-Name,Goal,Progress,Completed,Displayed, Checkbox
-,0,0,False,False,False
-,0,0,False,False,False
-,0,0,False,False,False
-,0,0,False,False,False
-,0,0,False,False,False
-,0,0,False,False,False
-,0,0,False,False,False
-,0,0,False,False,False
+Name,Goal,Progress,Completed,Displayed,Checkbox,Category
+g,1,0,False,True,False,Health
+h,1,0,False,True,False,Health
+j,1,0,False,True,False,Health
+1,1,0,False,True,False,Health
+g,1,0,False,True,False,Health
+j,1,0,False,True,False,Health
+5,1,0,False,True,False,Health
+q,1,0,False,True,False,Health

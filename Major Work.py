@@ -3,41 +3,25 @@ import tkinter as tk
 import tkinter.messagebox as messagebox
 import pandas as pd
 from PIL import Image
-
-
-# TO DOs
-# Write instructions and create pop up window
-# Improve the UI - Design features (try removing background colour of labels, adding border colour to frame)
-# Add habit categories (list them at bottom of screen, colour code them with frame borders, make little colour squares appear in the calendar frames that it was completed)
-# Add a daily calendar function at the top
-# Create calendar tracking window with stats (optional)
-# Change the pop up windows for create and edit habit to be all in one window, using entry fields instead of dialog boxes (optional)
-# Make it so that selectiing the day at the top, it will then allow you to tick off habits for that day.
-
-
-# Make it so that deleting a habit sets its name to Habit + Habit_id instead of blank
-# Make the appearance remember what it is set to when you close and reopen
-
-
-# Completed
-
+from datetime import date
+from datetime import timedelta
 
 
 # Creates main app window
 app = custom.CTk()
 app.title("Habit Tracker")
-app.geometry('660x700+550+130')
+app.geometry('660x690+600+130')
 app.resizable(False, False)
 custom.set_appearance_mode("Dark")
 current_theme = custom.get_appearance_mode()
-custom.set_default_color_theme("green")
+custom.set_default_color_theme("blue")  
 
 
 # Reads the habits.csv file to receive all the saved data of each habit
 def read_csv(): 
     global df
     df = pd.read_csv("Habits.csv")
-read_csv()
+read_csv() # Immediately reads the csv file upon opening the program
 
 # Writes the data onto the habits.csv file to save any changes
 def write_csv(habit_id):
@@ -47,6 +31,7 @@ def write_csv(habit_id):
     df.iloc[(habit_id - 1),3] = habit_completed[habit_id]
     df.iloc[(habit_id - 1),4] = habit_displayed[habit_id]
     df.iloc[(habit_id - 1),5] = habit_checkbox[habit_id]
+    df.iloc[(habit_id - 1),6] = habit_category[habit_id]
     df.to_csv('Habits.csv', index = False)
 
 
@@ -57,10 +42,22 @@ habit_progress = {1: df.iloc[0,2], 2: df.iloc[1,2], 3: df.iloc[2,2], 4: df.iloc[
 habit_completed = {1: df.iloc[0,3], 2: df.iloc[1,3], 3: df.iloc[2,3], 4: df.iloc[3,3], 5: df.iloc[4,3], 6: df.iloc[5,3], 7: df.iloc[6,3], 8: df.iloc[7,3]}
 habit_displayed = {1: df.iloc[0,4], 2: df.iloc[1,4], 3: df.iloc[2,4], 4: df.iloc[3,4], 5: df.iloc[4,4], 6: df.iloc[5,4], 7: df.iloc[6,4], 8: df.iloc[7,4]}
 habit_checkbox = {1: df.iloc[0,5], 2: df.iloc[1,5], 3: df.iloc[2,5], 4: df.iloc[3,5], 5: df.iloc[4,5], 6: df.iloc[5,5], 7: df.iloc[6,5], 8: df.iloc[7,5]}
+habit_category = {1: df.iloc[0,6], 2: df.iloc[1,6], 3: df.iloc[2,6], 4: df.iloc[3,6], 5: df.iloc[4,6], 6: df.iloc[5,6], 7: df.iloc[6,6], 8: df.iloc[7,6]}
 appearance_label = None
 background = "#242424"
 frame = "#2b2b2b"
+gold = "#daa520"
 full = False
+
+
+# Category colours
+health = "#ffb3ba"
+fitness = "#baffc9"
+learning = "#bae1ff"
+finance = "#ffffba"
+fun = "#ffdfba"
+other = "#eecbff"
+
 
 # Initialises all the lists for habit labels and buttons
 habit_frames = []
@@ -136,7 +133,7 @@ def reset_button():
             complete_habit_buttons[i-1].grid_forget()
             edit_habit_buttons[i-1].grid_forget()
             delete_habit_buttons[i-1].grid_forget()
-            habit_name[i] = ""
+            habit_name[i] = "Habit " + str(i)
             habit_goal[i] = 0
             habit_progress[i] = 0
             habit_displayed[i] = False # Sets habit slot to available
@@ -176,7 +173,7 @@ def delete_button(habit_id):
     complete_habit_buttons[habit_id-1].grid_forget()
     edit_habit_buttons[habit_id-1].grid_forget()
     delete_habit_buttons[habit_id-1].grid_forget()
-    habit_name[habit_id] = ""
+    habit_name[habit_id] = "Habit " + str(habit_id)
     habit_goal[habit_id] = 0
     habit_progress[habit_id] = 0
     habit_displayed[habit_id] = False # Sets habit slot to available
@@ -212,7 +209,7 @@ def settings_button():
                                     width=80,
                                     command = lambda: [app.deiconify(), settings_window.destroy()])
     save_button.place(relx=0.5, rely=0.7, anchor=tk.CENTER)
- 
+
     appearance_menu = custom.CTkOptionMenu(settings_window,
                                 values=["Dark", "Light", "System"],
                                 command = change_appearance)
@@ -318,7 +315,7 @@ def edit_habit(habit_id):
         else:
             habit_goal[habit_id] = placehold_goal
             break
-
+    
     habit_progress[habit_id] = 0
     update_habit(habit_id)
 
@@ -328,60 +325,98 @@ def create_habit():
     habit_id = find_lowest_available_habit_id()
     if habit_id == None:
         return
-    while True:
-        dialog_name = custom.CTkInputDialog(text="Please enter the name of the habit: ")
-        dialog_name.geometry('325x175+825+500')
-        dialog_name.title("Create Habit")
-        placehold_name = dialog_name.get_input()
-        if placehold_name == "":
-            messagebox.showerror("Error", "Please enter a name with at least 1 character.")
-        elif placehold_name == None:
-            dialog_name.destroy
-            break
-        elif len(placehold_name) > 15:
-            messagebox.showerror("Error", "Please enter a name shorter than 15 characters.")
-        else:
-            habit_name[habit_id] = placehold_name
-            break
     
-    while True:
-        dialog_goal = custom.CTkInputDialog(text="How many times do you aim to complete this habit per week? ")
-        dialog_goal.geometry('325x175+825+500')
-        dialog_goal.title("Create Goal")
-        placehold_goal = dialog_goal.get_input()
-        if placehold_goal == None:
-            dialog_goal.destroy
-            break
-        elif placehold_goal == "":
-            messagebox.showerror("Error", "Please enter a number.")
-        elif placehold_goal == "0":
-            messagebox.showerror("Error", "Please enter a number greater than 0.")
-        elif placehold_goal.isnumeric() == False:
-            messagebox.showerror("Error", "Please enter a number.")
-        elif int(placehold_goal) > 20:
-            messagebox.showerror("Error", "Please enter a number less than 20.")
-        else:
-            habit_goal[habit_id] = placehold_goal
-            habit_displayed[habit_id] = True
-            break
-    
-    if placehold_name != None and placehold_goal != None:
-        habit_progress[habit_id] = 0
-        habit_displayed[habit_id] = True # Sets habit slot to closed
-        update_habit(habit_id)
-        show_habit(habit_id)
+    create_habit = custom.CTkToplevel(app)
+    create_habit.title("Create Habit")
+    create_habit.geometry('400x500+750+280')
+    create_habit.resizable(False, False)
+    create_habit.attributes('-topmost', True)
 
-    write_csv(habit_id)
+    create_habit_label = custom.CTkLabel(create_habit,
+                                text="Create Habit",
+                                text_color="White",
+                                font = ("",30))
+    create_habit_label.place(relx=0.5, rely=0.12, anchor=tk.CENTER)
+
+    name_label = custom.CTkLabel(create_habit,
+                                text="What is the name of the habit?",
+                                text_color="White")
+    name_label.place(relx=0.5, rely=0.25, anchor=tk.CENTER)
+
+    name_input = custom.CTkEntry(create_habit,
+                                placeholder_text = "Habit Name",
+                                width = 200)
+    name_input.place(relx=0.5, rely=0.31, anchor=tk.CENTER)
+
+    goal_label = custom.CTkLabel(create_habit,
+                                text="How many times do you want to complete it per week?",
+                                text_color="White")
+    goal_label.place(relx=0.5, rely=0.42, anchor=tk.CENTER)
+    
+    goal_options = custom.CTkOptionMenu(create_habit,
+                                values=["1", "2", "3", "4", "5", "6", "7"],
+                                width = 55)
+    goal_options.place(relx=0.5, rely=0.48, anchor=tk.CENTER)
+
+    category_label = custom.CTkLabel(create_habit,
+                                text="What category is this habit?",
+                                text_color="White")
+    category_label.place(relx=0.5, rely=0.59, anchor=tk.CENTER)
+
+    category_options = custom.CTkOptionMenu(create_habit,
+                                values=["Health", "Fitness", "Learning", "Finance", "Fun", "Other"],
+                                width = 55)
+    category_options.place(relx=0.5, rely=0.65, anchor=tk.CENTER)
+
+    def inside_create(habit_id):
+        placehold_name = name_input.get()
+        placehold_goal = goal_options.get()
+        placehold_category = category_options.get()
+        
+        while True:
+            if placehold_name == "":
+                messagebox.showerror("Error", "Please enter a name with at least 1 character.", parent = create_habit)
+                break
+            elif len(placehold_name) > 15:
+                messagebox.showerror("Error", "Please enter a name shorter than 15 characters.", parent = create_habit)
+                break
+            else:
+                habit_name[habit_id] = str(placehold_name)
+                habit_goal[habit_id] = int(placehold_goal)
+                habit_category[habit_id] = str(placehold_category)
+                habit_progress[habit_id] = 0
+                habit_displayed[habit_id] = True
+                update_habit(habit_id)
+                show_habit(habit_id)
+                create_habit.destroy()
+                break
+        
+    def cancel_habit_button():
+        create_habit.destroy()
+
+    habit_create = custom.CTkButton(create_habit, text="Create",
+                            text_color="Black",
+                            width = 80,
+                            command = lambda habit_id=habit_id: inside_create(habit_id))
+    habit_create.place(relx=0.65, rely=0.9, anchor=tk.CENTER)
+
+    habit_cancel = custom.CTkButton(create_habit, text="Cancel",
+                            text_color="Black",
+                            fg_color="Firebrick",
+                            hover_color = "Orangered",
+                            width = 80,
+                            command=cancel_habit_button)
+    habit_cancel.place(relx=0.35, rely=0.9, anchor=tk.CENTER)
 
 
 # Buttons
-create_habit_button_ = custom.CTkButton(master=app,
+create_habit_button = custom.CTkButton(master=app,
                             text="Create\n Habit",
                             text_color="Black",
                             width=70,
                             height=70,
                             command = create_habit)
-create_habit_button_.place(relx=0.9, rely=0.9, anchor=tk.CENTER)
+create_habit_button.place(relx=0.9, rely=0.92, anchor=tk.CENTER)
 
 instructions_button = custom.CTkButton(master=app,
                             text="Instructions",
@@ -392,7 +427,7 @@ settings_button = custom.CTkButton(master=app,
                             text="Settings",
                             text_color="Black",
                             command = settings_button)
-settings_button.place(relx=0.12, rely=0.87, anchor=tk.CENTER)
+settings_button.place(relx=0.12, rely=0.875, anchor=tk.CENTER)
 
 exit_button = custom.CTkButton(master=app,
                             text="Exit",
@@ -400,7 +435,7 @@ exit_button = custom.CTkButton(master=app,
                             fg_color = "Firebrick",
                             hover_color = "black",
                             command=exit_button)
-exit_button.place(relx=0.12, rely=0.94, anchor=tk.CENTER)
+exit_button.place(relx=0.12, rely=0.95, anchor=tk.CENTER)
 
 reset_button = custom.CTkButton(master=app,
                             text="Reset",
@@ -411,21 +446,22 @@ reset_button = custom.CTkButton(master=app,
                             width=70,
                             height=70,
                             command = reset_button)
-reset_button.place(relx=0.75, rely=0.9, anchor=tk.CENTER)
+reset_button.place(relx=0.75, rely=0.92, anchor=tk.CENTER)
 
 
 # Habits
 edit_icon = custom.CTkImage(light_image=Image.open("Edit Icon.png"), size = (15, 15))
 delete_icon = custom.CTkImage(light_image=Image.open("Delete Icon.png"), size = (15, 15))
+category = frame
 
 for i in range(1,9):
     if i <= 4:
-        habit_frame = custom.CTkFrame(app, width=150, height=200, border_width = 2)
-        habit_frame.grid(row=1, column=i, padx=7, pady=10, sticky="nsew")
+        habit_frame = custom.CTkFrame(app, width=150, height=200, border_color = category, border_width = 2)
+        habit_frame.grid(row=1, column=i, padx=7, pady=(20,10), sticky="nsew")
         habit_frame.grid_propagate(False)
         habit_frames.append(habit_frame)
     else:
-        habit_frame = custom.CTkFrame(app, width=150, height=200, border_width = 2)
+        habit_frame = custom.CTkFrame(app, width=150, height=200)
         habit_frame.grid(row=2, column=i-4, padx=7, pady=10, sticky="nsew")
         habit_frame.grid_propagate(False)
         habit_frames.append(habit_frame)    
@@ -513,12 +549,80 @@ invisible_frame = custom.CTkFrame(app, width=0, height=60)
 invisible_frame.grid(row = 0, column = 0, pady = 10)
 
 calendar_frames = []
+calendar_checks = []
+day_labels = []
+date_labels = []
+
+dates = []
+for i in range (10):
+    today = date.today()
+    day = today - timedelta(days = i)
+    dates.append(day.day)
+
+
+days = []
+for i in range (10):
+    today = date.today()
+    day = today - timedelta(days = i)
+    days.append(day.strftime("%a").upper())
+
 
 for i in range(10):
-    calendar_frame = custom.CTkFrame(app, width=55, height=60)
+    if i == 9:
+        width = 2
+    else:
+        width = 0
+
+    if len(str(dates[(9-i)])) == 1:
+        xpos = 0.42
+    else:
+        xpos = 0.35
+
+    if str(days[9-i]) == "FRI":
+        xpos2 = 0.35
+    else:
+        xpos2 = 0.3
+
+    calendar_frame = custom.CTkFrame(app, width=55, height=70, border_color = gold, border_width = width)
     calendar_frame.place(relx = (0.013 + i*0.099), rely = 0.015)
     calendar_frame.grid_propagate(False)
     calendar_frames.append(calendar_frame)
+
+    invisible_top_frame = custom.CTkFrame(calendar_frame, width=0, height=0)
+    invisible_top_frame.grid(row = 0, column = 0, pady = 19)
+
+    date_label = custom.CTkLabel(calendar_frame, text = dates[(9-i)], text_color = "white", font = ("Microsoft Sans Serif",13), height = 4)
+    date_label.place(relx = xpos, rely = 0.08)
+    date_labels.append(date_label)
+
+    day_label = custom.CTkLabel(calendar_frame, text = days[(9-i)], text_color = "grey", font = ("Microsoft Sans Serif",10), height = 4)
+    day_label.place(relx = xpos2, rely = 0.32)
+    day_labels.append(day_label)
+
+    for i in range(1,9):
+        invisible_side_frame = custom.CTkFrame(calendar_frame, width=0, height=0, fg_color = frame)
+        invisible_side_frame.grid(row = 0, column = 0, padx = 1.5)
+        if i <= 4:
+            calendar_check = custom.CTkButton(calendar_frame,
+                                text="",
+                                width=8,
+                                height=8,
+                                fg_color="red",
+                                hover = False,
+                                corner_radius = 3)
+            calendar_check.grid(row=2, column=i, padx=2, pady=2)
+            calendar_checks.append(calendar_check)
+        else:
+            calendar_check = custom.CTkButton(calendar_frame,
+                                text="",
+                                width=8,
+                                height=8,
+                                fg_color="red",
+                                hover = False,
+                                corner_radius = 3)
+            calendar_check.grid(row=3, column=i-4, padx=2, pady=2)
+            calendar_checks.append(calendar_check)
+
 
 initial_open()
 
