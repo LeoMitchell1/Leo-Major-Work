@@ -1,9 +1,9 @@
 Name,Goal,Progress,Completed,Displayed,Checkbox,Category
-g,1,0,False,True,False,Health
-h,1,0,False,True,False,Health
-j,1,0,False,True,False,Health
-1,1,0,False,True,False,Health
-g,1,0,False,True,False,Health
-j,1,0,False,True,False,Health
-5,1,0,False,True,False,Health
-q,1,0,False,True,False,Health
+Habit 1,0,0,False,False,False,False
+Habit 2,0,0,False,False,False,False
+Habit 3,0,0,False,False,False,False
+Habit 4,0,0,False,False,False,False
+Habit 5,0,0,False,False,False,False
+Habit 6,0,0,False,False,False,False
+Habit 7,0,0,False,False,False,False
+Habit 8,0,0,False,False,False,False
