@@ -1,2 +1,13 @@
+# Habit Tracker App
+By Leo Mitchell
 
-Installation Instructions:
+## Project Description:
+
+
+
+
+## Installation Instructions:
+
+
+
+## On Startup:
