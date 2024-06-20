@@ -3,16 +3,10 @@
 ## TO DOs
 
 1. Write instructions and create pop up window for it
-2. Improve the UI - Design features (try removing background colour of labels, adding border colour to frame)
-3. Add habit categories (list them at bottom of screen, colour code them with frame borders, make little colour squares appear in the calendar frames that it was completed)
-4. Create calendar tracking window with stats (optional)
-6. Make the appearance remember what it is set to when you close and reopen
-7. Go through and optimise the code, removing duplicates, simplifying functions etc.
-10. Make the progress for each habit save when the day changes, the checkbox will then reset to default to allow for the next progression
-11. Write README file contents
-12. Go through and add comments explaining everything
+4. Write README file contents
+5. Go through and add comments explaining everything
 
-## Completed
+## Completed    
 
 * Go through and do Error management for all inputs (7/4)
 * Add a dialog window for exit confirmation (7/4)
@@ -26,6 +20,9 @@
 * Change the pop up windows for create and edit habit to be all in one window, using entry fields instead of dialog boxes (21/5)
 * Make it so that the indicators only show when a habit has been checked (24/5)
 * Make the calendar indicators save and shuffle to the left as the days change (16/6)
+* Make the progress for each habit save when the day changes, the checkbox will then reset to default to allow for the next progression (17/6)
+* Add habit categories listed at the bottom of the screen (19/6)
+* 
 
 ## Problems
 
@@ -41,6 +38,9 @@
 10. Habit label font colours are light grey when in light mode (12/6)
 11. Habit checkbox would remain on if the habit was deleted and then recreated (10/6)
 12. The indication history is displaying in the opposite order, the order needs to be inverted (16/6)
+13. If you change the goal when the checkbox is true, the progress is set to zero and the checkbox stays on (17/6)
+14. Changing the category through edit turns off the indicator and leave the checkbox on (17/6)
+15. Changing the category or name sets the progress to 0 and turns off the checkbox (18/6)
 
 ## Solutions
 
@@ -51,7 +51,11 @@
 5. Moved the error checking to before the creation of the window (20/5)
 6. Added each check frame to a dictionary so that its positioned can be changed and saved in the correct order. (24/5)
 7. Added an error check if the name is null to show an error box (7/6)
-8. 
+8. Fixed this by adding multiple if statements to check if the name was changed or not, and then edited the habit accordingly (18/6)
 9. Implemented the create variable from the create habit function and changed it to edit and used it for both (7/6)
 10. Added an if statement after changing the theme to change the text and border colour to the correct colour (16/6)
 11. Added an if statement when deleting or reseting a habit to toggle the checkbox to false (13/6)
+12. Fixed this by checking through the columns and rows of calendar.csv with (9-i) instead i, going from last to first as needed (17/6)
+13. After editing a habit the checklist is toggled off if the goal was changed. (18/6)
+14. Separated the case for editing the category so that the habit updates correctly (17/6)
+15. Removed the goal from being set to 0 in the category and name change cases, modified update habit function to calculate the current percentage (20/6)

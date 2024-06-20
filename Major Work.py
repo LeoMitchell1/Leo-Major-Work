@@ -67,7 +67,6 @@ day7 = {1: cdf.iloc[7,0], 2: cdf.iloc[7,1], 3: cdf.iloc[7,2], 4: cdf.iloc[7,3], 
 day8 = {1: cdf.iloc[8,0], 2: cdf.iloc[8,1], 3: cdf.iloc[8,2], 4: cdf.iloc[8,3], 5: cdf.iloc[8,4], 6: cdf.iloc[8,5], 7: cdf.iloc[8,6], 8: cdf.iloc[8,7]}
 day9 = {1: cdf.iloc[9,0], 2: cdf.iloc[9,1], 3: cdf.iloc[9,2], 4: cdf.iloc[9,3], 5: cdf.iloc[9,4], 6: cdf.iloc[9,5], 7: cdf.iloc[9,6], 8: cdf.iloc[9,7]}
 calendar_days.extend([day0,day1,day2,day3,day4,day5,day6,day7,day8,day9])
-# (calendar_days[2])[2] Can use this to access/change specific positions within different days
 
 
 # Initialises all the lists for habit labels and buttons
@@ -94,7 +93,7 @@ def shuffle_days():
     
     for i in range(10):
         for j in range(8):
-            cdf.iloc[i, j] = (calendar_days[i])[j + 1]
+            cdf.iloc[i, j] = (calendar_days[i])[j + 1] # AI used here
 
     for i in range (10):
         today = date.today()
@@ -110,7 +109,6 @@ def shuffle_days():
         hdf.to_csv('Habits.csv', index = False)
         cdf.to_csv('Calendar.csv', index = False)
         
-
 
 def category_colour(habit_id):
     if habit_category[habit_id] == "Health":
@@ -132,7 +130,7 @@ def category_colour(habit_id):
 # Function to find the lowest available habit id
 def find_lowest_available_habit_id(): 
     lowest_id = None
-    for habit_id, display_status in habit_displayed.items(): 
+    for habit_id, display_status in habit_displayed.items(): # AI used here
         if display_status == False:  # Check if habit slot is available
             if lowest_id is None or habit_id < lowest_id:
                 lowest_id = habit_id
@@ -252,6 +250,46 @@ def delete_button(habit_id):
     write_csv(habit_id)
     
 
+def clear_history():
+    global edit
+    clear_confirm = custom.CTkToplevel(app)
+    clear_confirm.title("Clear Confirmation")
+    clear_confirm.geometry('250x120+900+500')
+    clear_confirm.resizable(False, False)
+    clear_confirm.attributes('-topmost', True)
+    
+    def clear_calendar():
+        for i in range(72):
+            calendar_checks[i].configure(fg_color = "transparent")
+
+        for i in range(1,10):
+            for j in range(8):
+                cdf.iloc[i, j] = False
+
+        cdf.to_csv('Calendar.csv', index = False)
+        clear_confirm.destroy()
+
+    clear_label = custom.CTkLabel(master=clear_confirm,
+                            text="Are you sure you want to\n clear your calendar history?")
+    clear_label.place(relx=0.5, rely=0.35, anchor=tk.CENTER)
+
+    yes_button = custom.CTkButton(master=clear_confirm,
+                            text="Yes",
+                            text_color="Black",
+                            fg_color="Firebrick",
+                            hover_color = "Orangered",
+                            width = 80,
+                            command=clear_calendar)
+    yes_button.place(relx=0.7, rely=0.7, anchor=tk.CENTER)
+
+    no_button = custom.CTkButton(master=clear_confirm,
+                            text="No",
+                            text_color="Black",
+                            width = 80,
+                            command=clear_confirm.destroy)
+    no_button.place(relx=0.3, rely=0.7, anchor=tk.CENTER)
+
+
 # Function for changing appearance
 def change_appearance(mode:str):
     global appearance_menu, current_theme
@@ -297,6 +335,38 @@ def settings_button():
     appearance_menu.set(current_theme)
 
     
+def instructions():
+    instructions_window = custom.CTkToplevel(app)
+    instructions_window.title("Instructions")
+    instructions_window.geometry('600x600+700+200')
+    instructions_window.resizable(False, False)
+    instructions_window.attributes('-topmost', True)
+    app.withdraw()
+
+    instructions_label = custom.CTkLabel(master=instructions_window,
+                                        text="Welcome to the Habit Tracker!\n\n"
+                                             "Here are the instructions on how to use it:\n\n"
+                                             "1. To create a new habit, click on the 'Create Habit' button.\n\n"
+                                             "2. Fill in the habit name and goal in the pop-up window.\n\n"
+                                             "3. Once created, the habit will appear on the main window.\n\n"
+                                             "4. To edit a habit, click on the 'Edit' button next to the habit.\n\n"
+                                             "5. To delete a habit, click on the 'Delete' button next to the habit.\n\n"
+                                             "6. To mark a habit as completed, check the checkbox next to the habit.\n\n"
+                                             "7. To update the progress of a habit, click on the 'Update Progress' button next to the habit.\n\n"
+                                             "8. To change the appearance of the app, click on the 'Settings' button.\n\n"
+                                             "9. To clear the history of completed habits, click on the 'Clear History' button.\n\n"
+                                             "10. To exit the app, click on the 'Exit' button.\n\n"
+                                             "That's it! Enjoy tracking your habits and stay motivated!")
+    instructions_label.place(relx=0.5, rely=0.4, anchor=tk.CENTER)
+
+    close_button = custom.CTkButton(master=instructions_window,
+                                    text="Close",
+                                    text_color="Black",
+                                    width=80,
+                                    command = lambda: [app.deiconify(), instructions_window.destroy()])
+    close_button.place(relx=0.5, rely=0.9, anchor=tk.CENTER)
+    
+
 # Function for updating habit progress
 def update_progress(habit_id):
     checkbox = check_vars[habit_id-1].get()
@@ -330,8 +400,9 @@ def update_habit(habit_id):
     global edit
     name_labels[habit_id-1].configure(text= str(habit_name[habit_id]))
     goal_labels[habit_id-1].configure(text="Goal: " + str(habit_goal[habit_id]) + "/w")
-    progress_labels[habit_id-1].configure(text="Progress: " + str(habit_progress[habit_id]) + "%")
-    progress_bars[habit_id-1].set(habit_progress[habit_id])
+    habit_percentage = (habit_progress[habit_id]/int(habit_goal[habit_id]))
+    progress_labels[habit_id-1].configure(text="Progress: " + (f"{(habit_percentage):.0%}"))
+    progress_bars[habit_id-1].set(habit_percentage)
     habit_frames[habit_id-1].configure(border_color = category_colour(habit_id))
     if edit == True:
         today_checks[habit_id-1].configure(fg_color = "")
@@ -401,6 +472,7 @@ def edit_habit(habit_id):
                                 values=["1", "2", "3", "4", "5", "6", "7"],
                                 width = 55)
     goal_options.place(relx=0.5, rely=0.48, anchor=tk.CENTER)
+    goal_options.set(str(habit_goal[habit_id]))
 
     category_label = custom.CTkLabel(edit_habit,
                                 text="What category is this habit?")
@@ -410,45 +482,59 @@ def edit_habit(habit_id):
                                 values=["Health", "Fitness", "Learning", "Finance", "Fun", "Other"],
                                 width = 55)
     category_options.place(relx=0.5, rely=0.65, anchor=tk.CENTER)
+    category_options.set(str(habit_category[habit_id]))
 
-    def inside_edit(habit_id):
+    def save_edit(habit_id):
         global edit
         placehold_name = name_input.get()
         placehold_goal = goal_options.get()
         placehold_category = category_options.get()
-        
-        while True:
-            if placehold_name == "":
-                messagebox.showerror("Error", "Please enter a name with at least 1 character.", parent = edit_habit)
-                break
-            elif len(placehold_name) > 15:
-                messagebox.showerror("Error", "Please enter a name shorter than 15 characters.", parent = edit_habit)
-                break
-            elif placehold_name == "null":
-                messagebox.showerror("Error", "You can't enter 'null' as a name.", parent = edit_habit)
-                break
-            else:
-                habit_name[habit_id] = str(placehold_name)
-                habit_goal[habit_id] = int(placehold_goal)
-                habit_category[habit_id] = str(placehold_category)
-                habit_progress[habit_id] = 0
-                habit_displayed[habit_id] = True
-                habit_completed[habit_id] = False
-                habit_checkbox[habit_id] = False
-                edit = True
-                update_habit(habit_id)
-                show_habit(habit_id)
-                edit_habit.destroy()
-                break
-        
+        if int(placehold_goal) != int(habit_goal[habit_id]): # If the goal was changed
+            check_value = complete_habit_buttons[habit_id-1].get()
+            if check_value == "True":
+                complete_habit_buttons[habit_id-1].toggle()
+            habit_goal[habit_id] = int(placehold_goal)
+            habit_progress[habit_id] = 0
+            habit_completed[habit_id] = False
+            habit_checkbox[habit_id] = False
+
+        if placehold_name != "": # If the habit name was changed
+            while True:
+                if placehold_name == "":
+                    messagebox.showerror("Error", "Please enter a name with at least 1 character.", parent = edit_habit)
+                    break
+                elif len(placehold_name) > 14:
+                    messagebox.showerror("Error", "Please enter a name shorter than 14 characters.", parent = edit_habit)
+                    break
+                elif placehold_name == "null":
+                    messagebox.showerror("Error", "You can't enter 'null' as a name.", parent = edit_habit)
+                    break
+                else:
+                    habit_name[habit_id] = str(placehold_name)
+                    habit_category[habit_id] = str(placehold_category)
+                    habit_displayed[habit_id] = True
+                    edit = True
+                    update_habit(habit_id)
+                    show_habit(habit_id)
+                    edit_habit.destroy()
+                    break
+        else:
+            habit_category[habit_id] = str(placehold_category)
+            habit_displayed[habit_id] = True
+            edit = True
+            update_habit(habit_id)
+            show_habit(habit_id)
+            edit_habit.destroy()
+                
+
     def cancel_edit_button():
         edit_habit.destroy()
 
-    habit_edit = custom.CTkButton(edit_habit, text="Edit",
+    habit_save = custom.CTkButton(edit_habit, text="Save",
                             text_color="Black",
                             width = 80,
-                            command = lambda habit_id=habit_id: inside_edit(habit_id))
-    habit_edit.place(relx=0.65, rely=0.9, anchor=tk.CENTER)
+                            command = lambda habit_id=habit_id: save_edit(habit_id))
+    habit_save.place(relx=0.65, rely=0.9, anchor=tk.CENTER)
 
     habit_cancel = custom.CTkButton(edit_habit, text="Cancel",
                             text_color="Black",
@@ -514,8 +600,8 @@ def create_habit():
             if placehold_name == "":
                 messagebox.showerror("Error", "Please enter a name with at least 1 character.", parent = create_habit)
                 break
-            elif len(placehold_name) > 15:
-                messagebox.showerror("Error", "Please enter a name shorter than 10 characters.", parent = create_habit)
+            elif len(placehold_name) > 14:
+                messagebox.showerror("Error", "Please enter a name shorter than 14 characters.", parent = create_habit)
                 break
             elif placehold_name == "null":
                 messagebox.showerror("Error", "You can't enter 'null' as a name.", parent = create_habit)
@@ -561,9 +647,19 @@ create_habit_button = custom.CTkButton(master=app,
                             command = create_habit)
 create_habit_button.place(relx=0.9, rely=0.92, anchor=tk.CENTER)
 
+clear_button = custom.CTkButton(master=app,
+                            text="Clear\n History",
+                            text_color="White",
+                            fg_color = "Firebrick",
+                            width=70,
+                            height=70,
+                            command = clear_history)
+clear_button.place(relx=0.6, rely=0.92, anchor=tk.CENTER)
+
 instructions_button = custom.CTkButton(master=app,
                             text="Instructions",
-                            text_color="Black")
+                            text_color="Black",
+                            command=instructions)
 instructions_button.place(relx=0.12, rely=0.8, anchor=tk.CENTER)
 
 settings_button = custom.CTkButton(master=app,
@@ -584,8 +680,6 @@ reset_button = custom.CTkButton(master=app,
                             text="Reset",
                             text_color="White",
                             fg_color = "Firebrick",
-                            border_color = "White",
-                            border_width = 2,
                             width=70,
                             height=70,
                             command = reset_button)
@@ -813,6 +907,83 @@ for i in range(10):
                                     corner_radius = 3)
                 calendar_check.grid(row=3, column=j-4, padx=2, pady=2)
                 calendar_checks.append(calendar_check)
+
+
+category_frame = custom.CTkFrame(app, width=150, height=120, border_color = category, border_width = 2)
+category_frame.place(relx = 0.26, rely = 0.8)
+
+health_label = custom.CTkLabel(category_frame, text="Health", font=("Microsoft Sans Serif", 10))
+health_label.place(relx=0.18, rely=0.04)
+
+health_category = custom.CTkButton(category_frame,
+                                    text="",
+                                    width=12,
+                                    height=12,
+                                    fg_color="#ffb3ba",
+                                    hover = False,
+                                    corner_radius = 3)
+health_category.place(relx = 0.07, rely = 0.1)
+
+learning_label = custom.CTkLabel(category_frame, text="Learning", font=("Microsoft Sans Serif", 10))
+learning_label.place(relx=0.18, rely=0.39)
+
+learning_category = custom.CTkButton(category_frame,
+                                    text="",
+                                    width=12,
+                                    height=12,
+                                    fg_color="#bae1ff",
+                                    hover = False,
+                                    corner_radius = 3)
+learning_category.place(relx = 0.07, rely = 0.45)
+
+fitness_label = custom.CTkLabel(category_frame, text="Fitness", font=("", 10))
+fitness_label.place(relx=0.18, rely=0.74)
+
+fitness_category = custom.CTkButton(category_frame,
+                                    text="",
+                                    width=12,
+                                    height=12,
+                                    fg_color="#baffc9",
+                                    hover = False,
+                                    corner_radius = 3)
+fitness_category.place(relx = 0.07, rely = 0.8)
+
+finance_label = custom.CTkLabel(category_frame, text="Finance", font=("", 10), fg_color="transparent")
+finance_label.place(relx=0.64, rely=0.04)
+
+finance_category = custom.CTkButton(category_frame,
+                                    text="",
+                                    width=12,
+                                    height=12,
+                                    fg_color="#ffffba",
+                                    hover = False,
+                                    corner_radius = 3)
+finance_category.place(relx = 0.53, rely = 0.1)
+
+fun_label = custom.CTkLabel(category_frame, text="Fun", font=("", 10), fg_color="transparent")
+fun_label.place(relx=0.64, rely=0.39)
+
+fun_category = custom.CTkButton(category_frame,
+                                    text="",
+                                    width=12,
+                                    height=12,
+                                    fg_color="#ffdfba",
+                                    hover = False,
+                                    corner_radius = 3)
+fun_category.place(relx = 0.53, rely = 0.45)
+
+other_label = custom.CTkLabel(category_frame, text="Other", font=("", 10), fg_color="transparent")
+other_label.place(relx=0.64, rely=0.74)
+
+other_category = custom.CTkButton(category_frame,
+                                    text="",
+                                    width=12,
+                                    height=12,
+                                    fg_color="#eecbff",
+                                    hover = False,
+                                    corner_radius = 3)
+other_category.place(relx = 0.53, rely = 0.8)
+
 
 shuffle_days()
 initial_open()
