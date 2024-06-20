@@ -12,9 +12,9 @@ app = custom.CTk()
 app.title("Habit Tracker")
 app.geometry('660x690+600+130')
 app.resizable(False, False)
-custom.set_appearance_mode("Dark")
+custom.set_appearance_mode("Dark") # Sets the customtkinter appearance theme to dark mode
 current_theme = custom.get_appearance_mode()
-custom.set_default_color_theme("blue")  
+custom.set_default_color_theme("blue")  # Sets the customtkinter colour theme to blue
 
 
 # Reads the habits.csv file to receive all the saved data of each habit
@@ -36,7 +36,7 @@ def write_csv(habit_id):
     hdf.iloc[(habit_id - 1),6] = habit_category[habit_id]
     cdf.iloc[0,(habit_id - 1)] = habit_category[habit_id] # Updates the categories for today
     
-    hdf.to_csv('Habits.csv', index = False)
+    hdf.to_csv('Habits.csv', index = False) # Writes the new data to the csv files
     cdf.to_csv('Calendar.csv', index = False)
 
 
@@ -54,7 +54,7 @@ background = "#242424"
 frame = "#2b2b2b"
 gold = "#daa520"
 
-
+# List of all the calendar days and their data from the calendar csv
 calendar_days = []
 day0 = {1: cdf.iloc[0,0], 2: cdf.iloc[0,1], 3: cdf.iloc[0,2], 4: cdf.iloc[0,3], 5: cdf.iloc[0,4], 6: cdf.iloc[0,5], 7: cdf.iloc[0,6], 8: cdf.iloc[0,7]}   
 day1 = {1: cdf.iloc[1,0], 2: cdf.iloc[1,1], 3: cdf.iloc[1,2], 4: cdf.iloc[1,3], 5: cdf.iloc[1,4], 6: cdf.iloc[1,5], 7: cdf.iloc[1,6], 8: cdf.iloc[1,7]}
@@ -80,22 +80,22 @@ complete_habit_buttons = []
 edit_habit_buttons = []
 delete_habit_buttons = []
 
-
+# Shuffles the days down and their data as the days change
 def shuffle_days():
-    today = date.today()
+    today = date.today() # Finds todays date
     difference = (today.day) - int(cdf.iloc[0,8]) # Finds the difference between today's date and the date of the most recent entry
 
-    for i in range(9, difference - 1, -1):
-        calendar_days[i] = calendar_days[i - difference]
+    for i in range(9, difference - 1, -1): # AI used here as it was a complicated operation with no online solutions
+        calendar_days[i] = calendar_days[i - difference] # Shuffles the days down by the difference
     
-    for i in range(difference):
+    for i in range(difference): # Sets the days between the last entry and today to all False (makes them empty)
         calendar_days[i] = {1: False, 2: False, 3: False, 4: False, 5: False, 6: False, 7: False, 8: False}
     
     for i in range(10):
         for j in range(8):
-            cdf.iloc[i, j] = (calendar_days[i])[j + 1] # AI used here
+            cdf.iloc[i, j] = (calendar_days[i])[j + 1] # AI used here as I couldn't figure out how to set all the data base values to each of the calendar days values
 
-    for i in range (10):
+    for i in range (10): # Sets all the new dates for each day
         today = date.today()
         day = today - timedelta(days = i)
         cdf.iloc[i, 8] = day.day
@@ -103,13 +103,13 @@ def shuffle_days():
     if difference != 0:
         for i in range(8):
             habit_checkbox[i+1] = False
-            if complete_habit_buttons[i].get() == True:
+            if complete_habit_buttons[i].get() == True: # If the habit checkbox is true toggle it to false
                 complete_habit_buttons[i].toggle()
             hdf.iloc[(i),5] = habit_checkbox[i+1]
         hdf.to_csv('Habits.csv', index = False)
         cdf.to_csv('Calendar.csv', index = False)
         
-
+# Assigns a colour to each category
 def category_colour(habit_id):
     if habit_category[habit_id] == "Health":
         return "#ffb3ba"
@@ -130,19 +130,19 @@ def category_colour(habit_id):
 # Function to find the lowest available habit id
 def find_lowest_available_habit_id(): 
     lowest_id = None
-    for habit_id, display_status in habit_displayed.items(): # AI used here
-        if display_status == False:  # Check if habit slot is available
+    for habit_id, display_status in habit_displayed.items(): # AI used here as it was a complicated function that I couldn't find an online solution to
+        if display_status == False:  # Checks if habit slot is available
             if lowest_id is None or habit_id < lowest_id:
                 lowest_id = habit_id
-                return lowest_id
-    if lowest_id == None:
+                return lowest_id # Returns the lowest available habit slot ID
+    if lowest_id == None: # Shows an error box if no lowest id is found (maximum habits)
         messagebox.showerror("Error", "You have reached the maximum amount of habits.")
         return lowest_id
 
 
 # Function for exit button
 def exit_button():
-    exit_confirm = custom.CTkToplevel(app)
+    exit_confirm = custom.CTkToplevel(app) # Creates exit confirm window
     exit_confirm.title("Exit Confirmation")
     exit_confirm.geometry('250x120+900+500')
     exit_confirm.resizable(False, False)
@@ -173,7 +173,7 @@ def exit_button():
 # Function for the reset button
 def reset_button():
     global edit
-    reset_confirm = custom.CTkToplevel(app)
+    reset_confirm = custom.CTkToplevel(app) # Creates reset confirm window
     reset_confirm.title("Reset Confirmation")
     reset_confirm.geometry('250x120+900+500')
     reset_confirm.resizable(False, False)
@@ -181,7 +181,7 @@ def reset_button():
     
     def reset_habits():
         global edit
-        for i in range(1,9):
+        for i in range(1,9): # Turns all the habit elements invisible
             name_labels[i-1].grid_forget()
             goal_labels[i-1].grid_forget()
             progress_labels[i-1].grid_forget()
@@ -189,14 +189,14 @@ def reset_button():
             complete_habit_buttons[i-1].grid_forget()
             edit_habit_buttons[i-1].grid_forget()
             delete_habit_buttons[i-1].grid_forget()
-            habit_name[i] = "Habit " + str(i)
+            habit_name[i] = "Habit " + str(i) # Resets all the habit data to defaults
             habit_goal[i] = 0
             habit_progress[i] = 0
             habit_displayed[i] = False # Sets habit slot to available
             habit_completed[i] = False
             habit_checkbox[i] = False
             habit_category[i] = False
-            check_value = complete_habit_buttons[i-1].get()
+            check_value = complete_habit_buttons[i-1].get() # If the checkbox is on it is toggled off
             if check_value == "True":
                 complete_habit_buttons[i-1].toggle()
             edit = False
@@ -228,14 +228,14 @@ def reset_button():
 # Function for delete button
 def delete_button(habit_id):
     global edit
-    name_labels[habit_id-1].grid_forget()
+    name_labels[habit_id-1].grid_forget() # Sets all of the habit elements to invisible
     goal_labels[habit_id-1].grid_forget()
     progress_labels[habit_id-1].grid_forget()
     progress_bars[habit_id-1].grid_forget()
     complete_habit_buttons[habit_id-1].grid_forget()
     edit_habit_buttons[habit_id-1].grid_forget()
     delete_habit_buttons[habit_id-1].grid_forget()
-    habit_name[habit_id] = "Habit " + str(habit_id)
+    habit_name[habit_id] = "Habit " + str(habit_id) # Sets all of the habit data to defaults
     habit_goal[habit_id] = 0
     habit_progress[habit_id] = 0
     habit_displayed[habit_id] = False # Sets habit slot to available
@@ -243,16 +243,17 @@ def delete_button(habit_id):
     habit_checkbox[habit_id] = False
     habit_category[habit_id] = False
     check_value = complete_habit_buttons[habit_id-1].get()
-    if check_value == "True":
+    if check_value == "True": # If the habit checkbox is true set it to false
         complete_habit_buttons[habit_id-1].toggle()
     edit = False
     update_habit(habit_id)
     write_csv(habit_id)
     
 
+# Clear the calendar history (removes all indicators)
 def clear_history():
     global edit
-    clear_confirm = custom.CTkToplevel(app)
+    clear_confirm = custom.CTkToplevel(app) # Creates clear confirm window
     clear_confirm.title("Clear Confirmation")
     clear_confirm.geometry('250x120+900+500')
     clear_confirm.resizable(False, False)
@@ -260,11 +261,11 @@ def clear_history():
     
     def clear_calendar():
         for i in range(72):
-            calendar_checks[i].configure(fg_color = "transparent")
+            calendar_checks[i].configure(fg_color = "transparent") # Changes all the calendar indicators to transparent
 
         for i in range(1,10):
             for j in range(8):
-                cdf.iloc[i, j] = False
+                cdf.iloc[i, j] = False # Sets all of the calendar csv to false except today
 
         cdf.to_csv('Calendar.csv', index = False)
         clear_confirm.destroy()
@@ -294,14 +295,14 @@ def clear_history():
 def change_appearance(mode:str):
     global appearance_menu, current_theme
     current_theme = mode
-    custom.set_appearance_mode(mode)
+    custom.set_appearance_mode(mode) # Changes the appearance mode to the selected theme
 
     if current_theme == "Light":
         colour_variable = "Black"
     else:
         colour_variable = "White"
 
-    for i in range(8):
+    for i in range(8): # Changes the text colours to be high contrasting to the background colour
         name_labels[i].configure(text_color=colour_variable, border_color=colour_variable)
         goal_labels[i].configure(text_color=colour_variable, border_color=colour_variable)
         progress_labels[i].configure(text_color=colour_variable, border_color=colour_variable)
@@ -334,30 +335,33 @@ def settings_button():
     appearance_menu.place(relx=0.5, rely=0.4, anchor=tk.CENTER)
     appearance_menu.set(current_theme)
 
-    
+
+# Function for instructions button
 def instructions():
-    instructions_window = custom.CTkToplevel(app)
+    instructions_window = custom.CTkToplevel(app) # Creates the instructions window
     instructions_window.title("Instructions")
     instructions_window.geometry('600x600+700+200')
     instructions_window.resizable(False, False)
     instructions_window.attributes('-topmost', True)
-    app.withdraw()
+    app.withdraw() # Makes the main window disappear
+
+    title_label = custom.CTkLabel(master=instructions_window,
+                                  text = "Welcome to the Habit Tracker!",
+                                  font = ("", 20))
+    title_label.place(relx = 0.28, rely = 0.08)
 
     instructions_label = custom.CTkLabel(master=instructions_window,
-                                        text="Welcome to the Habit Tracker!\n\n"
-                                             "Here are the instructions on how to use it:\n\n"
+                                        text="Here are the instructions on how to use it:\n\n"
                                              "1. To create a new habit, click on the 'Create Habit' button.\n\n"
-                                             "2. Fill in the habit name and goal in the pop-up window.\n\n"
+                                             "2. Fill in the habit name then select a goal and category.\n\n"
                                              "3. Once created, the habit will appear on the main window.\n\n"
-                                             "4. To edit a habit, click on the 'Edit' button next to the habit.\n\n"
-                                             "5. To delete a habit, click on the 'Delete' button next to the habit.\n\n"
-                                             "6. To mark a habit as completed, check the checkbox next to the habit.\n\n"
-                                             "7. To update the progress of a habit, click on the 'Update Progress' button next to the habit.\n\n"
-                                             "8. To change the appearance of the app, click on the 'Settings' button.\n\n"
-                                             "9. To clear the history of completed habits, click on the 'Clear History' button.\n\n"
-                                             "10. To exit the app, click on the 'Exit' button.\n\n"
+                                             "4. To edit a habit, click on the 'Edit' button at the bottom of the habit.\n\n"
+                                             "5. To delete a habit, click on the 'Delete' button at the bottom of the habit.\n\n"
+                                             "6. To mark a habit as completed, check the checkbox at the bottom of the habit.\n\n"
+                                             "7. To clear the history of completed habits, click on the 'Clear History' button.\n\n"
+                                             "8. To exit the app, click on the 'Exit' button.\n\n"
                                              "That's it! Enjoy tracking your habits and stay motivated!")
-    instructions_label.place(relx=0.5, rely=0.4, anchor=tk.CENTER)
+    instructions_label.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
 
     close_button = custom.CTkButton(master=instructions_window,
                                     text="Close",
@@ -370,50 +374,53 @@ def instructions():
 # Function for updating habit progress
 def update_progress(habit_id):
     checkbox = check_vars[habit_id-1].get()
-    if checkbox == 'True':
+    if checkbox == 'True': # Checks if the checkbox is on
         if (habit_progress[habit_id]) < int(habit_goal[habit_id]):
             habit_progress[habit_id] += 1
-            habit_percentage = (habit_progress[habit_id]/int(habit_goal[habit_id]))
-            progress_labels[habit_id-1].configure(text="Progress: " + (f"{(habit_percentage):.0%}"))
+            habit_percentage = (habit_progress[habit_id]/int(habit_goal[habit_id])) # Calculates the habit percentage
+            progress_labels[habit_id-1].configure(text="Progress: " + (f"{(habit_percentage):.0%}")) # Displays the percentage
             progress_bars[habit_id-1].set(habit_percentage)
-            if habit_progress[habit_id] >= int(habit_goal[habit_id]):
+            if habit_progress[habit_id] >= int(habit_goal[habit_id]): # Checks if the habit has been completed
                 progress_labels[habit_id-1].configure(text="Completed!")
                 habit_completed[habit_id] = True
         habit_checkbox[habit_id] = True
-        today_checks[habit_id-1].configure(fg_color = category_colour(habit_id))
-    if checkbox == 'False':
-        if habit_progress[habit_id] > 0:
+        today_checks[habit_id-1].configure(fg_color = category_colour(habit_id)) # Turns on the associated calendar indicator
+    if checkbox == 'False': # Checks if the checkbox is off
+        if habit_progress[habit_id] > 0: 
             habit_progress[habit_id] -= 1
-            habit_percentage = (habit_progress[habit_id]/int(habit_goal[habit_id]))
-            progress_labels[habit_id-1].configure(text="Progress: " + (f"{(habit_percentage):.0%}"))
+            habit_percentage = (habit_progress[habit_id]/int(habit_goal[habit_id])) # Calculates the habit percentage
+            progress_labels[habit_id-1].configure(text="Progress: " + (f"{(habit_percentage):.0%}")) # Displays the habit percentage
             progress_bars[habit_id-1].set(habit_percentage)
             if habit_progress[habit_id] < int(habit_goal[habit_id]):
                 progress_labels[habit_id-1].configure(text="Progress: " + (f"{(habit_percentage):.0%}"))
                 habit_completed[habit_id] = False
         habit_checkbox[habit_id] = False
-        today_checks[habit_id-1].configure(fg_color = "")
+        today_checks[habit_id-1].configure(fg_color = "") # Sets today's indicator to invisible
     write_csv(habit_id)
 
 
 # Updates habit buttons and labels
 def update_habit(habit_id):
     global edit
-    name_labels[habit_id-1].configure(text= str(habit_name[habit_id]))
-    goal_labels[habit_id-1].configure(text="Goal: " + str(habit_goal[habit_id]) + "/w")
-    habit_percentage = (habit_progress[habit_id]/int(habit_goal[habit_id]))
-    progress_labels[habit_id-1].configure(text="Progress: " + (f"{(habit_percentage):.0%}"))
+    name_labels[habit_id-1].configure(text= str(habit_name[habit_id])) # Displays the current habit name
+    goal_labels[habit_id-1].configure(text="Goal: " + str(habit_goal[habit_id]) + "/w") # Displays the current goal
+    if habit_progress[habit_id] == 0 and habit_goal[habit_id] == 0:
+        habit_percentage = 0
+    else:
+        habit_percentage = (habit_progress[habit_id]/int(habit_goal[habit_id]))
+    progress_labels[habit_id-1].configure(text="Progress: " + (f"{(habit_percentage):.0%}")) # Displays the progress
     progress_bars[habit_id-1].set(habit_percentage)
     habit_frames[habit_id-1].configure(border_color = category_colour(habit_id))
     if edit == True:
-        today_checks[habit_id-1].configure(fg_color = "")
+        today_checks[habit_id-1].configure(fg_color = "") # Turns off today's indicator
     else:
-        today_checks[habit_id-1].configure(fg_color = category_colour(habit_id))
+        today_checks[habit_id-1].configure(fg_color = category_colour(habit_id)) # Turns on today's indicator
     edit = False
     write_csv(habit_id)
 
 
 # Function for showing a new habit
-def show_habit(habit_id):
+def show_habit(habit_id): # Places all of the habit elements
     name_labels[habit_id-1].grid(row=0, column=0, padx=15, pady=(18, 5), sticky = "we")
     goal_labels[habit_id-1].grid(row=1, column=0, padx=15, pady=5,  sticky = "we")
     progress_labels[habit_id-1].grid(row=2, column=0, padx=15, pady=5,  sticky = "we")
@@ -425,7 +432,7 @@ def show_habit(habit_id):
 
 # Initially displays all the habits that were previously open
 def initial_open():
-    for i in range(1,9):
+    for i in range(1,9): # Goes through all the habits and displays their progresses
         if habit_displayed[i] == True:
             if habit_progress[i] == 0 and habit_goal[i] == 0:
                 habit_percentage = 0
@@ -444,7 +451,7 @@ def initial_open():
 # Function for edit button
 def edit_habit(habit_id):
     global edit
-    edit_habit = custom.CTkToplevel(app)
+    edit_habit = custom.CTkToplevel(app) # Creates the edit window
     edit_habit.title("Edit Habit")
     edit_habit.geometry('400x500+750+280')
     edit_habit.resizable(False, False)
@@ -486,7 +493,7 @@ def edit_habit(habit_id):
 
     def save_edit(habit_id):
         global edit
-        placehold_name = name_input.get()
+        placehold_name = name_input.get() # Gets the input from the name, goal and category fields
         placehold_goal = goal_options.get()
         placehold_category = category_options.get()
         if int(placehold_goal) != int(habit_goal[habit_id]): # If the goal was changed
@@ -499,7 +506,7 @@ def edit_habit(habit_id):
             habit_checkbox[habit_id] = False
 
         if placehold_name != "": # If the habit name was changed
-            while True:
+            while True: # Checks for user errors
                 if placehold_name == "":
                     messagebox.showerror("Error", "Please enter a name with at least 1 character.", parent = edit_habit)
                     break
@@ -524,7 +531,7 @@ def edit_habit(habit_id):
             edit = True
             update_habit(habit_id)
             show_habit(habit_id)
-            edit_habit.destroy()
+            edit_habit.destroy() # Closes the edit window
                 
 
     def cancel_edit_button():
@@ -552,7 +559,7 @@ def create_habit():
     if habit_id == None:
         return
     
-    create_habit = custom.CTkToplevel(app)
+    create_habit = custom.CTkToplevel(app) # Creates the habit window
     create_habit.title("Create Habit")
     create_habit.geometry('400x500+750+280')
     create_habit.resizable(False, False)
@@ -592,22 +599,22 @@ def create_habit():
 
     def inside_create(habit_id):
         global edit
-        placehold_name = name_input.get()
+        placehold_name = name_input.get() # Gets all the values from the input fields
         placehold_goal = goal_options.get()
         placehold_category = category_options.get()
         
         while True:
-            if placehold_name == "":
+            if placehold_name == "": # If the name field is empty
                 messagebox.showerror("Error", "Please enter a name with at least 1 character.", parent = create_habit)
                 break
-            elif len(placehold_name) > 14:
+            elif len(placehold_name) > 14: # If the name field is too long
                 messagebox.showerror("Error", "Please enter a name shorter than 14 characters.", parent = create_habit)
                 break
-            elif placehold_name == "null":
+            elif placehold_name == "null": # If the name field is null
                 messagebox.showerror("Error", "You can't enter 'null' as a name.", parent = create_habit)
                 break
             else:
-                habit_name[habit_id] = str(placehold_name)
+                habit_name[habit_id] = str(placehold_name) # Sets the habit data to the entered inputs
                 habit_goal[habit_id] = int(placehold_goal)
                 habit_category[habit_id] = str(placehold_category)
                 habit_progress[habit_id] = 0
@@ -687,21 +694,21 @@ reset_button.place(relx=0.75, rely=0.92, anchor=tk.CENTER)
 
 
 # Habits
-edit_icon = custom.CTkImage(light_image=Image.open("Edit Icon.png"), size = (15, 15))
-delete_icon = custom.CTkImage(light_image=Image.open("Delete Icon.png"), size = (15, 15))
+edit_icon = custom.CTkImage(light_image=Image.open("Images\Edit Icon.png"), size = (15, 15))
+delete_icon = custom.CTkImage(light_image=Image.open("Images\Delete Icon.png"), size = (15, 15))
 if current_theme == "Light":
     colour_variable = "Black"
 else:
     colour_variable = "White"
 
-for i in range(1,9):
+for i in range(1,9): # Creates all the habit frames and elements
     category = category_colour(i)
-    if i <= 4:
+    if i <= 4: # First row of frames
         habit_frame = custom.CTkFrame(app, width=150, height=200, border_color = category, border_width = 2)
         habit_frame.grid(row=1, column=i, padx=7, pady=(20,10), sticky="nsew")
         habit_frame.grid_propagate(False)
         habit_frames.append(habit_frame)
-    else:
+    else: # Second row of frames
         habit_frame = custom.CTkFrame(app, width=150, height=200, border_color = category, border_width = 2)
         habit_frame.grid(row=2, column=i-4, padx=7, pady=10, sticky="nsew")
         habit_frame.grid_propagate(False)
@@ -798,7 +805,7 @@ day_labels = []
 date_labels = []
 
 dates = []
-for i in range(10):
+for i in range(10): # Calculates the dates of the last 10 days
     today = date.today()
     day = today - timedelta(days = i)
     dates.append(day.day)
@@ -807,9 +814,9 @@ days = []
 for i in range(10):
     today = date.today()
     day = today - timedelta(days = i)
-    days.append(day.strftime("%a").upper())
+    days.append(day.strftime("%a").upper()) # Gets the day in all caps
 
-for i in range(10):
+for i in range(10): # Creates all of the calendar frames and elements 10 times
     if i == 9:
         width = 2
     else:
@@ -839,7 +846,7 @@ for i in range(10):
     day_label.place(relx = xpos2, rely = 0.32)
     day_labels.append(day_label)
 
-    if i == 9:
+    if i == 9: # Creates todays calendar indicators
         for j in range(1,9):
             if habit_checkbox[j] == True and (calendar_days[0])[j] == habit_category[j]:
                 category = category_colour(j)
@@ -868,8 +875,8 @@ for i in range(10):
                                     corner_radius = 3)
                 today_check.grid(row=3, column=j-4, padx=2, pady=2)
                 today_checks.append(today_check)
-    else:
-        for j in range(1,9):
+    else: # Creates all of the other calendar indicators
+        for j in range(1,9): # Identifies all the categories of the habits in the last 10 days and assigns them the right colour
             if cdf.iloc[(9-i), (j-1)] == "Health":
                 category = "#ffb3ba"
             elif cdf.iloc[(9-i), (j-1)] == "Fitness":
@@ -885,9 +892,9 @@ for i in range(10):
             else:
                 category = ""
 
-            invisible_side_frame = custom.CTkFrame(calendar_frame, width=0, height=0, fg_color = frame)
+            invisible_side_frame = custom.CTkFrame(calendar_frame, width=0, height=0, fg_color = frame) # Used to position the checks correctly
             invisible_side_frame.grid(row = 0, column = 0, padx = 1.5)
-            if j <= 4:
+            if j <= 4: # First row of indicators
                 calendar_check = custom.CTkButton(calendar_frame,
                                     text="",
                                     width=8,
@@ -897,7 +904,7 @@ for i in range(10):
                                     corner_radius = 3)
                 calendar_check.grid(row=2, column=j, padx=2, pady=2)
                 calendar_checks.append(calendar_check)
-            else:
+            else: # Second row of indicators
                 calendar_check = custom.CTkButton(calendar_frame,
                                     text="",
                                     width=8,
@@ -909,10 +916,11 @@ for i in range(10):
                 calendar_checks.append(calendar_check)
 
 
+# Category list
 category_frame = custom.CTkFrame(app, width=150, height=120, border_color = category, border_width = 2)
 category_frame.place(relx = 0.26, rely = 0.8)
 
-health_label = custom.CTkLabel(category_frame, text="Health", font=("Microsoft Sans Serif", 10))
+health_label = custom.CTkLabel(category_frame, text="Health", font=("", 10))
 health_label.place(relx=0.18, rely=0.04)
 
 health_category = custom.CTkButton(category_frame,
@@ -924,7 +932,7 @@ health_category = custom.CTkButton(category_frame,
                                     corner_radius = 3)
 health_category.place(relx = 0.07, rely = 0.1)
 
-learning_label = custom.CTkLabel(category_frame, text="Learning", font=("Microsoft Sans Serif", 10))
+learning_label = custom.CTkLabel(category_frame, text="Learning", font=("", 10))
 learning_label.place(relx=0.18, rely=0.39)
 
 learning_category = custom.CTkButton(category_frame,
@@ -983,7 +991,6 @@ other_category = custom.CTkButton(category_frame,
                                     hover = False,
                                     corner_radius = 3)
 other_category.place(relx = 0.53, rely = 0.8)
-
 
 shuffle_days()
 initial_open()

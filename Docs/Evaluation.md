@@ -1,18 +1,30 @@
 # Evaluation
-
+The evaluation of the project is a necessary stage after the software solution has been developed, this is done through various testing and criteria. The software solution must be tested in order to ensure that the final product meets the criteria for success. This evaluation process involved the continual use of RGB testing throughout the project as well as the evaluation of a set of criteria once the software solution was completed.
 
 ## RGB Testing
-Throughout the implemenation of the project I utilised RGB testing to find errors and improve the code. 
+Throughout the implemenation of the project I utilised RGB testing to find errors and improve the code. A typical RGB test would involve 3 stages, being Red, Green and Blue. The red stage involves writing the minimum amount of code to ensure that it compiles. This stage of the test is designed to fail. The green phase involves creating the very minimum amount of code to pass the test successfully, though the code isn't optimised. Finally, the blue phase involves optimising and improving the code to enhance the overall solution. By testing the code in this way, a solution is able to be quickly found and improved within a short span of time. The solution is systematically found and enhanced with each test and can be easily modelled together with each functioning test. I conducted various RGB testing through the development/implementation of the project, three being listed below.
 
-A typical RGB test would involve 
+### Calendar Category testing:
+In this test I was trying to iterate through every day and habit within the calendar database and identify their category. I would then be able to allocate the correct colour to each indicator associated with the day and habit. To successfully pass the test the program should iterate through the databse and print out the category of every habit in the database, if the habit had no category then it should print False. A total of 80 outputs should be printed, all being correctly associated with the habits in the database.
+
+### Lowest ID testing:
+This test involved trying to find the lowest available id out of the 8 habit slots. This was needed so that when creating a habit it selects the next available slot in the list. Once the slots reach the maximum of 8 this function needs to identify that there is no available id and show an appropriate error message to the user. After following the RGB scaffold I was able to meet the criteria I needed for this section of the code. This section of code required some use of generative AI as indicated through comments as it was a complicated iteration that I couldn't figure out or find solutions to online. Overall, this test passed successfully and was implemented into the final solution.
+
+### Read and Write testing:
+This test involves RGB testing the program's ability to read and write from the habit data base. This was a necessary test as reading and writing from databases was an essential part of the program. I set up the test by following the RGB structure and had the reading function print the database when it is ran, this showed me if it was reading the file correctly as it should display its contents. I then tested the writing capabilities by setting the habit_names and goals to various values and then running the test to see if the database updated to those values. After running the test it passed successfully and I was able to implement it into my project.
 
 
 ## Performance
-
+The performance of the software solution refers to how well the program can perform under various conditions without significant latency, speed or reliability issues. In order to assess the performance of the software solution I made sure that it met two criteria; being responsiveness and stability. The program should respond quickly and without significant lag or delay and be able to operate and perform various functions for an extended period of time without failing. After testing the program against both of these criteria and seeing that it passed successfully, I can say that the software solution meets the performance criteria necessary for this project. All operations are completed promptly and the program can be open and used for an extended period of time without any reliability issues.
 
 
 ## Usability
-
+The software solution's usability involves how streamlilned the user interface is and how easy it is for a variety of users to navigate and functionally use the product. To assess the usability of this program I set the criteria of effectiveness and satisfaction. In order for the software solution to meet the necessary level of usability for this project it must be able to be easily understood and used without causing users significant error or being difficult to learn. If users are struggling to identify navigation elements or understand how to perform certain actions then the program could not be considered highly usable. As well as being used effectively the program should also have a level of satisfaction when used. This would involve promptly opening and closing popups/pages, and having various design features such as changing hover colour to improve the user experience. My program meets both of these criteria by having clear layouts, elements and design features that improve and create a clean user experience. Overall, this software solution is highly useable.
 
 
 ## Overall Success
+The overall success of the software solution refers to how well it meets each criteria for success and whether or not it functions correctly and as intended in the proposal stage. To ensure that the project can be deemed an overall success it must meet the criteria of all modules functioning correctly without errors and that the project meet its performance and usability criteria. As shown in the previous sections, this software solution has passed its usability and performance criteria. As well as this all modules function correctly and have been tested numerous times by multiple users without issues.
+
+Overall, based on testing and evaluative criteria, this project was very successful. The solution was able to function correctly, the user experience was streamlined and the program performed consistently and efficiently. All modules were completed and functioned as intended, including the habit module, calendar module, GUI module, data storage module and design features module. 
+
+That being said, in order to further improve the quality and functionality of this project some actionable steps could be taken. These include having a more sophisticated instructions page with a walk-through tutorial and visual elements, including clean animations for various operations, add more appearance/customisation options, increase the number of habit slots (possibly by having a scrolling page or by having multiple pages using a button).

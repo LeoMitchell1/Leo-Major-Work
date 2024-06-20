@@ -1,5 +1,6 @@
 Habit1,Habit2,Habit3,Habit4,Habit5,Habit6,Habit7,Habit8,Date
-Fitness,False,False,False,False,False,False,False,20
+Fitness,Fitness,Health,Fitness,False,False,False,False,21
+False,False,False,False,False,False,False,False,20
 False,False,False,False,False,False,False,False,19
 False,False,False,False,False,False,False,False,18
 False,False,False,False,False,False,False,False,17
@@ -8,4 +9,3 @@ False,False,False,False,False,False,False,False,15
 False,False,False,False,False,False,False,False,14
 False,False,False,False,False,False,False,False,13
 False,False,False,False,False,False,False,False,12
-False,False,False,False,False,False,False,False,11

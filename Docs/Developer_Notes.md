@@ -2,9 +2,7 @@
 
 ## TO DOs
 
-1. Write instructions and create pop up window for it
-4. Write README file contents
-5. Go through and add comments explaining everything
+* All Completed
 
 ## Completed    
 
@@ -22,7 +20,9 @@
 * Make the calendar indicators save and shuffle to the left as the days change (16/6)
 * Make the progress for each habit save when the day changes, the checkbox will then reset to default to allow for the next progression (17/6)
 * Add habit categories listed at the bottom of the screen (19/6)
-* 
+* Instructions and pop up window made (20/6)
+* ReadMe file contents written (20/6)
+* Comments written throughout code (20/6)
 
 ## Problems
 
@@ -41,6 +41,7 @@
 13. If you change the goal when the checkbox is true, the progress is set to zero and the checkbox stays on (17/6)
 14. Changing the category through edit turns off the indicator and leave the checkbox on (17/6)
 15. Changing the category or name sets the progress to 0 and turns off the checkbox (18/6)
+16. Editing a habit turns off the indicator (21/6)
 
 ## Solutions
 
@@ -59,3 +60,4 @@
 13. After editing a habit the checklist is toggled off if the goal was changed. (18/6)
 14. Separated the case for editing the category so that the habit updates correctly (17/6)
 15. Removed the goal from being set to 0 in the category and name change cases, modified update habit function to calculate the current percentage (20/6)
+16. 
