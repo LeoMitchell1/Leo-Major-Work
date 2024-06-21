@@ -412,7 +412,7 @@ def update_habit(habit_id):
     progress_bars[habit_id-1].set(habit_percentage)
     habit_frames[habit_id-1].configure(border_color = category_colour(habit_id))
     if edit == True:
-        today_checks[habit_id-1].configure(fg_color = "") # Turns off today's indicator
+        pass
     else:
         today_checks[habit_id-1].configure(fg_color = category_colour(habit_id)) # Turns on today's indicator
     edit = False
@@ -496,15 +496,7 @@ def edit_habit(habit_id):
         placehold_name = name_input.get() # Gets the input from the name, goal and category fields
         placehold_goal = goal_options.get()
         placehold_category = category_options.get()
-        if int(placehold_goal) != int(habit_goal[habit_id]): # If the goal was changed
-            check_value = complete_habit_buttons[habit_id-1].get()
-            if check_value == "True":
-                complete_habit_buttons[habit_id-1].toggle()
-            habit_goal[habit_id] = int(placehold_goal)
-            habit_progress[habit_id] = 0
-            habit_completed[habit_id] = False
-            habit_checkbox[habit_id] = False
-
+        
         if placehold_name != "": # If the habit name was changed
             while True: # Checks for user errors
                 if placehold_name == "":
@@ -518,20 +510,32 @@ def edit_habit(habit_id):
                     break
                 else:
                     habit_name[habit_id] = str(placehold_name)
-                    habit_category[habit_id] = str(placehold_category)
                     habit_displayed[habit_id] = True
                     edit = True
-                    update_habit(habit_id)
-                    show_habit(habit_id)
-                    edit_habit.destroy()
                     break
-        else:
+                
+        if str(placehold_category) != str(habit_category[habit_id]): # If the category was changed
             habit_category[habit_id] = str(placehold_category)
             habit_displayed[habit_id] = True
-            edit = True
+            edit = False
             update_habit(habit_id)
             show_habit(habit_id)
             edit_habit.destroy() # Closes the edit window
+
+        if int(placehold_goal) != int(habit_goal[habit_id]): # If the goal was changed
+            check_value = complete_habit_buttons[habit_id-1].get()
+            if check_value == "True":
+                complete_habit_buttons[habit_id-1].toggle()
+            habit_goal[habit_id] = int(placehold_goal)
+            habit_progress[habit_id] = 0
+            edit = True
+            habit_completed[habit_id] = False
+            habit_checkbox[habit_id] = False
+
+        habit_category[habit_id] = str(placehold_category)
+        update_habit(habit_id)
+        show_habit(habit_id)
+        edit_habit.destroy()
                 
 
     def cancel_edit_button():

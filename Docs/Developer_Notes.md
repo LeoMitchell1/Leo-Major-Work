@@ -60,4 +60,4 @@
 13. After editing a habit the checklist is toggled off if the goal was changed. (18/6)
 14. Separated the case for editing the category so that the habit updates correctly (17/6)
 15. Removed the goal from being set to 0 in the category and name change cases, modified update habit function to calculate the current percentage (20/6)
-16. 
+16. Seperated and moved the different cases within the edit function and modified the edit variable in each (21/6)
