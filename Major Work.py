@@ -491,6 +491,9 @@ def edit_habit(habit_id):
     category_options.place(relx=0.5, rely=0.65, anchor=tk.CENTER)
     category_options.set(str(habit_category[habit_id]))
 
+    '''This function receives the information from the edit input fields and checks for errors before updating
+    the associated habit data. The function is broken into three if main if statements for if the goal was changed,
+    or category was changed.'''
     def save_edit(habit_id):
         global edit
         placehold_name = name_input.get() # Gets the input from the name, goal and category fields
@@ -531,6 +534,8 @@ def edit_habit(habit_id):
             edit = True
             habit_completed[habit_id] = False
             habit_checkbox[habit_id] = False
+        else:
+            edit = False
 
         habit_category[habit_id] = str(placehold_category)
         update_habit(habit_id)
