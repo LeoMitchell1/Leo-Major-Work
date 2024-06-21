@@ -515,6 +515,7 @@ def edit_habit(habit_id):
                     habit_name[habit_id] = str(placehold_name)
                     habit_displayed[habit_id] = True
                     edit = True
+                    edit_habit.destroy()
                     break
                 
         if str(placehold_category) != str(habit_category[habit_id]): # If the category was changed
@@ -523,7 +524,8 @@ def edit_habit(habit_id):
             edit = False
             update_habit(habit_id)
             show_habit(habit_id)
-            edit_habit.destroy() # Closes the edit window
+            if placehold_name == "":
+                edit_habit.destroy()
 
         if int(placehold_goal) != int(habit_goal[habit_id]): # If the goal was changed
             check_value = complete_habit_buttons[habit_id-1].get()
@@ -534,13 +536,14 @@ def edit_habit(habit_id):
             edit = True
             habit_completed[habit_id] = False
             habit_checkbox[habit_id] = False
+            if placehold_name == "":
+                edit_habit.destroy()
         else:
             edit = False
 
         habit_category[habit_id] = str(placehold_category)
         update_habit(habit_id)
         show_habit(habit_id)
-        edit_habit.destroy()
                 
 
     def cancel_edit_button():
