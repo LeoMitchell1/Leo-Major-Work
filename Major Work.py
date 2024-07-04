@@ -83,7 +83,13 @@ delete_habit_buttons = []
 # Shuffles the days down and their data as the days change
 def shuffle_days():
     today = date.today() # Finds todays date
-    difference = (today.day) - int(cdf.iloc[0,8]) # Finds the difference between today's date and the date of the most recent entry
+    if today.day > int(cdf.iloc[0,8]):
+        difference = (today.day) - int(cdf.iloc[0,8]) # Finds the difference between today's date and the date of the most recent entry
+    else:
+        difference = (today.day) + 30 - int(cdf.iloc[0,8]) # Handles the case where the date today is in the next month from the last entry
+
+    if difference >= 10: # Checks if the difference is greater than 10 and then just sets it to 9 so that it only shuffles down the necessary amount
+        difference = 10
 
     for i in range(9, difference - 1, -1): # AI used here as it was a complicated operation with no online solutions
         calendar_days[i] = calendar_days[i - difference] # Shuffles the days down by the difference
